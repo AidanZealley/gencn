@@ -40,7 +40,7 @@
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "pnpm build",
-    "prepack": "cp ../../LICENSE ../../registry/NOTICE ."
+    "prepack": "cp ../../LICENSE ../../NOTICE ."
   },
   "dependencies": {
     "re2js": "^2.10.0"

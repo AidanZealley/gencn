@@ -1,3 +1,4 @@
+// Props adapted from @json-render/shadcn's catalog (Apache-2.0); see NOTICE.
 import { z } from 'zod'
 import { defineBlockDef, gap } from '../block.js'
 
