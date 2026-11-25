@@ -4,6 +4,7 @@ import { defineCatalog, type Spec } from '@json-render/core'
 import { schema } from '@json-render/react/schema'
 import { Card, Image, Stack, Switch } from './index.js'
 import { checkSpec, validateBlocks } from './validate.js'
+import { toolPrompt } from './prompt.js'
 
 const catalog = defineCatalog(schema, {
   components: { Card, Image, Stack, Switch },
@@ -48,4 +49,13 @@ test('catches what catalog.validate lets through', () => {
   const codes = validateBlocks(catalog, spec).map((i) => i.code)
   expect(codes).toEqual(['invalid_props', 'unknown_event', 'unknown_action'])
   expect(checkSpec(catalog, spec)).toContain('expected boolean')
+})
+
+test("toolPrompt lists each block and the app's actions, not json-render streaming", () => {
+  const text = toolPrompt(catalog)
+  expect(text).toContain(
+    '- Switch: { label: string, description?: string, checked?: boolean, disabled?: boolean }',
+  )
+  expect(text).toContain('- call_tool: Calls a tool. Params: { tool: string }.')
+  expect(text).not.toContain('JSONL')
 })
