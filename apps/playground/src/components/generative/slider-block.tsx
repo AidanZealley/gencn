@@ -1,48 +1,52 @@
 'use client'
 
-import { Slider as SliderDef } from 'gencn'
-import { defineBlock } from 'gencn/react'
 import { useId, useState } from 'react'
+import { Slider } from 'gencn'
+import { defineBlock } from 'gencn/react'
 import { useBoundProp } from '@json-render/react'
 import { Field, FieldLabel } from '@/components/ui/field'
-import { Slider } from '@/components/ui/slider'
+import { Slider as Range } from '@/components/ui/slider'
 
-const first = (value: number | readonly number[]) =>
-  typeof value === 'number' ? value : (value[0] ?? 0)
+/** Base UI reports one thumb's value as a number or a one-item list. */
+const single = (value: number | readonly number[]) =>
+  Array.isArray(value) ? (value[0] ?? 0) : (value as number)
 
-// Adapted from @json-render/shadcn (Apache-2.0), github.com/vercel-labs/json-render.
 export const sliderBlock = defineBlock(
-  SliderDef,
+  Slider,
   function SliderBlock({ props, bindings, emit }) {
     const id = useId()
-    const { min = 0, max = 100, step = 1, unit = '' } = props
-    // Bound with $bindState: the view's state owns the value. Else this does.
+    const min = props.min ?? 0
+    const max = props.max ?? 100
+    // `value` bound with $bindState lives in the view's state; otherwise the
+    // block keeps its own.
     const path = bindings?.value
-    const [bound, setBound] = useBoundProp(props.value, path)
-    const [local, setLocal] = useState(props.value ?? min)
-    const value = path ? (bound ?? min) : local
+    const [stateValue, writeState] = useBoundProp(props.value, path)
+    const [ownValue, setOwnValue] = useState(props.value ?? min)
+    const value = (path ? stateValue : ownValue) ?? min
+
+    const move = (next: number) => (path ? writeState(next) : setOwnValue(next))
 
     return (
       <Field data-disabled={props.disabled}>
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex items-baseline justify-between gap-2">
           <FieldLabel htmlFor={id}>{props.label}</FieldLabel>
-          <span className="text-sm text-muted-foreground tabular-nums">
+          <output
+            htmlFor={id}
+            className="text-sm text-muted-foreground tabular-nums"
+          >
             {value}
-            {unit}
-          </span>
+            {props.unit}
+          </output>
         </div>
-        <Slider
+        <Range
           id={id}
-          value={[value]}
           min={min}
           max={max}
-          step={step}
+          step={props.step ?? 1}
+          value={[value]}
           disabled={props.disabled}
-          onValueChange={(next) => {
-            if (path) setBound(first(next))
-            else setLocal(first(next))
-          }}
-          // Fire once on release, so a drag doesn't call an action per tick.
+          onValueChange={(next) => move(single(next))}
+          // One change when the person lets go, not one per step of a drag.
           onValueCommitted={() => emit('change')}
         />
       </Field>

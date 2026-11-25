@@ -40,5 +40,6 @@ pnpm test
 Slider and Select are Base UI only for now, so they're only published under
 `base-*` styles.
 
-Licensed under Apache-2.0 (`LICENSE`). The registry blocks are adapted from
-`@json-render/shadcn` (Apache-2.0); see `NOTICE`.
+Licensed under Apache-2.0 (`LICENSE`). The block definitions' props in
+`packages/core` are adapted from `@json-render/shadcn` (Apache-2.0); see
+`NOTICE`. The registry blocks are gencn's own.

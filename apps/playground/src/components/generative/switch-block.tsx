@@ -1,8 +1,8 @@
 'use client'
 
-import { Switch as SwitchDef } from 'gencn'
-import { defineBlock } from 'gencn/react'
 import { useId, useState } from 'react'
+import { Switch } from 'gencn'
+import { defineBlock } from 'gencn/react'
 import { useBoundProp } from '@json-render/react'
 import {
   Field,
@@ -10,18 +10,27 @@ import {
   FieldDescription,
   FieldLabel,
 } from '@/components/ui/field'
-import { Switch } from '@/components/ui/switch'
+import { Switch as Toggle } from '@/components/ui/switch'
 
-// Adapted from @json-render/shadcn (Apache-2.0), github.com/vercel-labs/json-render.
 export const switchBlock = defineBlock(
-  SwitchDef,
+  Switch,
   function SwitchBlock({ props, bindings, emit }) {
     const id = useId()
-    // Bound with $bindState: the view's state owns the value. Else this does.
+    // `checked` bound with $bindState lives in the view's state; otherwise
+    // the block keeps its own.
     const path = bindings?.checked
-    const [bound, setBound] = useBoundProp(props.checked, path)
-    const [local, setLocal] = useState(props.checked ?? false)
-    const checked = path ? (bound ?? false) : local
+    const [stateValue, writeState] = useBoundProp(props.checked, path)
+    const [ownValue, setOwnValue] = useState(props.checked ?? false)
+    const checked = (path ? stateValue : ownValue) ?? false
+
+    const toggle = (next: boolean) => {
+      if (path) writeState(next)
+      else setOwnValue(next)
+      // Absolute events for on and off tools, and change for a set tool;
+      // a view binds one kind or the other.
+      emit(next ? 'turnOn' : 'turnOff')
+      emit('change')
+    }
 
     return (
       <Field orientation="horizontal" data-disabled={props.disabled}>
@@ -31,18 +40,11 @@ export const switchBlock = defineBlock(
             <FieldDescription>{props.description}</FieldDescription>
           )}
         </FieldContent>
-        <Switch
+        <Toggle
           id={id}
           checked={checked}
           disabled={props.disabled}
-          onCheckedChange={(next) => {
-            if (path) setBound(next)
-            else setLocal(next)
-            // turnOn/turnOff for separate on and off tools; change for a
-            // tool that takes the new value. A view binds one or the other.
-            emit(next ? 'turnOn' : 'turnOff')
-            emit('change')
-          }}
+          onCheckedChange={toggle}
         />
       </Field>
     )

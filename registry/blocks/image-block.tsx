@@ -1,22 +1,19 @@
 'use client'
 
-import { Image as ImageDef } from 'gencn'
+import { Image } from 'gencn'
 import { defineBlock } from 'gencn/react'
 import { cn } from '@/lib/utils'
 
-const aspects = { auto: '', square: 'aspect-square', video: 'aspect-video' }
+const ratios = { auto: '', square: 'aspect-square', video: 'aspect-video' }
 
-// Adapted from @json-render/shadcn (Apache-2.0), github.com/vercel-labs/json-render.
-export const imageBlock = defineBlock(ImageDef, function ImageBlock({ props }) {
-  return (
-    <img
-      src={props.src}
-      alt={props.alt}
-      loading="lazy"
-      className={cn(
-        'w-full bg-muted object-cover',
-        aspects[props.aspect ?? 'auto'],
-      )}
-    />
-  )
-})
+export const imageBlock = defineBlock(Image, ({ props }) => (
+  <img
+    src={props.src}
+    alt={props.alt}
+    loading="lazy"
+    className={cn(
+      'w-full bg-muted object-cover',
+      ratios[props.aspect ?? 'auto'],
+    )}
+  />
+))

@@ -1,10 +1,9 @@
 'use client'
 
-import { Badge as BadgeDef } from 'gencn'
+import { Badge } from 'gencn'
 import { defineBlock } from 'gencn/react'
-import { Badge } from '@/components/ui/badge'
+import { Badge as Label } from '@/components/ui/badge'
 
-// Adapted from @json-render/shadcn (Apache-2.0), github.com/vercel-labs/json-render.
-export const badgeBlock = defineBlock(BadgeDef, function BadgeBlock({ props }) {
-  return <Badge variant={props.variant ?? 'default'}>{props.text}</Badge>
-})
+export const badgeBlock = defineBlock(Badge, ({ props }) => (
+  <Label variant={props.variant ?? 'default'}>{props.text}</Label>
+))

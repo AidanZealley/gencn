@@ -1,24 +1,21 @@
 'use client'
 
-import { Stat as StatDef } from 'gencn'
+import { Stat } from 'gencn'
 import { defineBlock } from 'gencn/react'
 
-export const statBlock = defineBlock(StatDef, function StatBlock({ props }) {
-  const { label, value, unit, caption } = props
-  return (
-    <div className="flex flex-col gap-1">
-      <span className="text-xs text-muted-foreground">{label}</span>
-      <span className="font-heading text-2xl font-semibold tabular-nums">
-        {value}
-        {unit && (
-          <span className="ml-1 text-sm font-normal text-muted-foreground">
-            {unit}
-          </span>
-        )}
-      </span>
-      {caption && (
-        <span className="text-xs text-muted-foreground">{caption}</span>
+export const statBlock = defineBlock(Stat, ({ props }) => (
+  <div className="flex flex-col gap-1">
+    <span className="text-xs text-muted-foreground">{props.label}</span>
+    <span className="text-2xl font-semibold tabular-nums">
+      {props.value}
+      {props.unit && (
+        <span className="ml-0.5 text-base font-normal text-muted-foreground">
+          {props.unit}
+        </span>
       )}
-    </div>
-  )
-})
+    </span>
+    {props.caption && (
+      <span className="text-xs text-muted-foreground">{props.caption}</span>
+    )}
+  </div>
+))
