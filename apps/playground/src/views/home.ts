@@ -1,4 +1,4 @@
-import type { ActionOutcome, OnAction, OnRead } from '@gencn/core/react'
+import type { ActionOutcome, OnAction, OnRead } from 'gencn'
 
 // A pretend Home Assistant, shaped like its real Assist tools: actions
 // name a device, answer with success and failed lists and no new state;

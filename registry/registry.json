@@ -7,8 +7,8 @@
       "name": "card-block",
       "type": "registry:component",
       "title": "Card block",
-      "description": "Renders the Card block from @gencn/core with your own shadcn components.",
-      "dependencies": ["@gencn/core", "@json-render/react"],
+      "description": "Renders the Card block from gencn with your own shadcn components.",
+      "dependencies": ["gencn", "@json-render/react"],
       "registryDependencies": ["card"],
       "files": [
         {
@@ -25,8 +25,8 @@
       "name": "stack-block",
       "type": "registry:component",
       "title": "Stack block",
-      "description": "Renders the Stack block from @gencn/core with your own shadcn components.",
-      "dependencies": ["@gencn/core", "@json-render/react"],
+      "description": "Renders the Stack block from gencn with your own shadcn components.",
+      "dependencies": ["gencn", "@json-render/react"],
       "registryDependencies": ["utils"],
       "files": [
         {
@@ -43,8 +43,8 @@
       "name": "grid-block",
       "type": "registry:component",
       "title": "Grid block",
-      "description": "Renders the Grid block from @gencn/core with your own shadcn components.",
-      "dependencies": ["@gencn/core", "@json-render/react"],
+      "description": "Renders the Grid block from gencn with your own shadcn components.",
+      "dependencies": ["gencn", "@json-render/react"],
       "registryDependencies": ["utils"],
       "files": [
         {
@@ -61,8 +61,8 @@
       "name": "separator-block",
       "type": "registry:component",
       "title": "Separator block",
-      "description": "Renders the Separator block from @gencn/core with your own shadcn components.",
-      "dependencies": ["@gencn/core", "@json-render/react"],
+      "description": "Renders the Separator block from gencn with your own shadcn components.",
+      "dependencies": ["gencn", "@json-render/react"],
       "registryDependencies": ["separator"],
       "files": [
         {
@@ -79,8 +79,8 @@
       "name": "heading-block",
       "type": "registry:component",
       "title": "Heading block",
-      "description": "Renders the Heading block from @gencn/core with your own shadcn components.",
-      "dependencies": ["@gencn/core", "@json-render/react"],
+      "description": "Renders the Heading block from gencn with your own shadcn components.",
+      "dependencies": ["gencn", "@json-render/react"],
       "files": [
         {
           "path": "blocks/heading-block.tsx",
@@ -96,8 +96,8 @@
       "name": "text-block",
       "type": "registry:component",
       "title": "Text block",
-      "description": "Renders the Text block from @gencn/core with your own shadcn components.",
-      "dependencies": ["@gencn/core", "@json-render/react"],
+      "description": "Renders the Text block from gencn with your own shadcn components.",
+      "dependencies": ["gencn", "@json-render/react"],
       "files": [
         {
           "path": "blocks/text-block.tsx",
@@ -113,8 +113,8 @@
       "name": "image-block",
       "type": "registry:component",
       "title": "Image block",
-      "description": "Renders the Image block from @gencn/core with your own shadcn components.",
-      "dependencies": ["@gencn/core", "@json-render/react"],
+      "description": "Renders the Image block from gencn with your own shadcn components.",
+      "dependencies": ["gencn", "@json-render/react"],
       "registryDependencies": ["utils"],
       "files": [
         {
@@ -131,8 +131,8 @@
       "name": "stat-block",
       "type": "registry:component",
       "title": "Stat block",
-      "description": "Renders the Stat block from @gencn/core with your own shadcn components.",
-      "dependencies": ["@gencn/core", "@json-render/react"],
+      "description": "Renders the Stat block from gencn with your own shadcn components.",
+      "dependencies": ["gencn", "@json-render/react"],
       "files": [
         {
           "path": "blocks/stat-block.tsx",
@@ -148,8 +148,8 @@
       "name": "badge-block",
       "type": "registry:component",
       "title": "Badge block",
-      "description": "Renders the Badge block from @gencn/core with your own shadcn components.",
-      "dependencies": ["@gencn/core", "@json-render/react"],
+      "description": "Renders the Badge block from gencn with your own shadcn components.",
+      "dependencies": ["gencn", "@json-render/react"],
       "registryDependencies": ["badge"],
       "files": [
         {
@@ -166,8 +166,8 @@
       "name": "switch-block",
       "type": "registry:component",
       "title": "Switch block",
-      "description": "Renders the Switch block from @gencn/core with your own shadcn components.",
-      "dependencies": ["@gencn/core", "@json-render/react"],
+      "description": "Renders the Switch block from gencn with your own shadcn components.",
+      "dependencies": ["gencn", "@json-render/react"],
       "registryDependencies": ["field", "switch"],
       "files": [
         {
@@ -184,8 +184,8 @@
       "name": "slider-block",
       "type": "registry:component",
       "title": "Slider block",
-      "description": "Renders the Slider block from @gencn/core with your own shadcn components.",
-      "dependencies": ["@gencn/core", "@json-render/react"],
+      "description": "Renders the Slider block from gencn with your own shadcn components.",
+      "dependencies": ["gencn", "@json-render/react"],
       "registryDependencies": ["field", "slider"],
       "files": [
         {
@@ -203,8 +203,8 @@
       "name": "select-block",
       "type": "registry:component",
       "title": "Select block",
-      "description": "Renders the Select block from @gencn/core with your own shadcn components.",
-      "dependencies": ["@gencn/core", "@json-render/react"],
+      "description": "Renders the Select block from gencn with your own shadcn components.",
+      "dependencies": ["gencn", "@json-render/react"],
       "registryDependencies": ["field", "select"],
       "files": [
         {
@@ -222,8 +222,8 @@
       "name": "button-block",
       "type": "registry:component",
       "title": "Button block",
-      "description": "Renders the Button block from @gencn/core with your own shadcn components.",
-      "dependencies": ["@gencn/core", "@json-render/react"],
+      "description": "Renders the Button block from gencn with your own shadcn components.",
+      "dependencies": ["gencn", "@json-render/react"],
       "registryDependencies": ["button"],
       "files": [
         {

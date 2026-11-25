@@ -77,9 +77,9 @@ export function extract(output: string, refresh: Refresh): Extracted[] {
           }
     }
     if (as === 'number') {
-      const value = Number(captured)
-      return captured.trim() !== '' && Number.isFinite(value)
-        ? { path, value, snippet }
+      // Decimal digits only: no hex, exponents, spaces or Infinity.
+      return /^-?\d+(\.\d+)?$/.test(captured)
+        ? { path, value: Number(captured), snippet }
         : { path, snippet, problem: `read "${captured}", not a number` }
     }
     return { path, value: captured, snippet }

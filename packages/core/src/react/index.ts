@@ -1,21 +1,12 @@
-// gencn's renderer. React is an optional peer of @gencn/core: only this
-// subpath needs it.
+// gencn's renderer. React is an optional peer of gencn: only this
+// subpath needs it. The view itself is the React-free `createViewActor`.
 export {
   createBlocks,
   defineBlock,
   type Block,
   type BlockView,
-  type Blocks,
   type ExactCover,
+  type ViewBlocks,
 } from './blocks.js'
 export { GencnView, type GencnViewProps } from './GencnView.js'
-export {
-  useGencnView,
-  type ActionOutcome,
-  type Args,
-  type CallOptions,
-  type GencnPhase,
-  type GencnViewOptions,
-  type OnAction,
-  type OnRead,
-} from './useGencnView.js'
+export { useGencnView, type GencnViewOptions } from './useGencnView.js'

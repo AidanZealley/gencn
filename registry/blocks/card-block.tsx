@@ -1,7 +1,7 @@
 'use client'
 
-import { Card as CardDef } from '@gencn/core'
-import { defineBlock } from '@gencn/core/react'
+import { Card as CardDef } from 'gencn'
+import { defineBlock } from 'gencn/react'
 import {
   Card,
   CardContent,

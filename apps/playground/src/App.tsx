@@ -1,6 +1,6 @@
 import { useMemo, useState, useSyncExternalStore } from 'react'
-import { checkRefresh, checkSpec, type Spec } from '@gencn/core'
-import { GencnView } from '@gencn/core/react'
+import { checkRefresh, checkSpec, type Spec } from 'gencn'
+import { GencnView } from 'gencn/react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { blocks } from './views/blocks'

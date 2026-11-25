@@ -50,7 +50,7 @@ export type ExactCover<C extends Catalog, B extends readonly AnyBlock[]> = [
   : { 'Missing blocks:': Missing<C, B> }
 
 /** What renders views: the catalog and json-render's registry of its blocks. */
-export type Blocks<C extends Catalog = Catalog> = {
+export type ViewBlocks<C extends Catalog = Catalog> = {
   catalog: C
   registry: ComponentRegistry
 }
@@ -62,7 +62,7 @@ export type Blocks<C extends Catalog = Catalog> = {
 export function createBlocks<
   C extends Catalog,
   const B extends readonly AnyBlock[],
->(catalog: C, blocks: B & ExactCover<C, B>): Blocks<C> {
+>(catalog: C, blocks: B & ExactCover<C, B>): ViewBlocks<C> {
   const list = blocks as readonly AnyBlock[]
   const names = list.map((block) => block.def.name)
   const twice = names.find((name, index) => names.indexOf(name) !== index)

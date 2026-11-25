@@ -1,7 +1,7 @@
 'use client'
 
-import { Stat as StatDef } from '@gencn/core'
-import { defineBlock } from '@gencn/core/react'
+import { Stat as StatDef } from 'gencn'
+import { defineBlock } from 'gencn/react'
 
 export const statBlock = defineBlock(StatDef, function StatBlock({ props }) {
   const { label, value, unit, caption } = props

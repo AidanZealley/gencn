@@ -1,7 +1,7 @@
 'use client'
 
-import { Text as TextDef } from '@gencn/core'
-import { defineBlock } from '@gencn/core/react'
+import { Text as TextDef } from 'gencn'
+import { defineBlock } from 'gencn/react'
 
 const tones = { default: 'text-foreground', muted: 'text-muted-foreground' }
 

@@ -1,7 +1,7 @@
 'use client'
 
-import { Heading as HeadingDef } from '@gencn/core'
-import { defineBlock } from '@gencn/core/react'
+import { Heading as HeadingDef } from 'gencn'
+import { defineBlock } from 'gencn/react'
 
 const levels = {
   1: { Tag: 'h2', className: 'text-lg font-semibold' },

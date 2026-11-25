@@ -86,13 +86,18 @@ test('catches what json-render lets through, and gencn rules', () => {
     params: { tool: 'Set' },
   }
   spec.elements.row!.on = { press: { action: 'reboot' } }
-  // callTool that would run by itself, after another action.
+  // json-render's own lifecycle stays usable: a chained callTool is fine.
   spec.elements.card!.on = {
     press: {
       action: 'setState',
       params: { statePath: '/x', value: 1 },
+      confirm: { title: 'Sure?', message: 'Built-ins draw their own dialog' },
       onSuccess: { action: 'callTool', params: { tool: 'HassTurnOn' } },
     },
+  } as never
+  // But not one that runs by itself.
+  spec.elements.row!.watch = {
+    '/kitchen': { action: 'callTool', params: { tool: 'HassTurnOn' } },
   } as never
   const problems = checkSpec(catalog, spec)
   for (const expected of [
@@ -101,7 +106,8 @@ test('catches what json-render lets through, and gencn rules', () => {
     'change and turnOn/turnOff', // a Switch would call twice
     'no "press" event',
     'unknown "reboot"',
-    'only be bound directly', // callTool placement
+    'never in watch', // callTool placement
+    'confirm works only on callTool',
   ]) {
     expect(problems).toContain(expected)
   }

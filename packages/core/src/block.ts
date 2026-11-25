@@ -3,7 +3,7 @@ import { z } from 'zod'
 /**
  * A block's behaviour, in json-render's catalog entry shape plus its name.
  * No React and no styling: the look comes from the registry item an app
- * installs (see `defineBlock` in `@gencn/core/react`).
+ * installs (see `defineBlock` in `gencn/react`).
  */
 export type BlockDef<
   Name extends string = string,

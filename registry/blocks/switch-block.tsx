@@ -1,7 +1,7 @@
 'use client'
 
-import { Switch as SwitchDef } from '@gencn/core'
-import { defineBlock } from '@gencn/core/react'
+import { Switch as SwitchDef } from 'gencn'
+import { defineBlock } from 'gencn/react'
 import { useId, useState } from 'react'
 import { useBoundProp } from '@json-render/react'
 import {

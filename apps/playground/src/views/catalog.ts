@@ -14,7 +14,7 @@ import {
   Switch,
   Text,
   createCatalog,
-} from '@gencn/core'
+} from 'gencn'
 
 export const catalog = createCatalog([
   Card,

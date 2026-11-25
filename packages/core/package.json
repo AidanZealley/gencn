@@ -1,5 +1,5 @@
 {
-  "name": "@gencn/core",
+  "name": "gencn",
   "version": "0.1.0",
   "description": "Generative UI from your own shadcn components: block definitions, view checks and a json-render renderer.",
   "keywords": [
@@ -9,9 +9,11 @@
     "llm",
     "mcp"
   ],
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "TODO: gencn's repository URL"
+    "url": "git+https://github.com/AidanZealley/gencn.git",
+    "directory": "packages/core"
   },
   "type": "module",
   "sideEffects": false,
@@ -26,7 +28,10 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
   ],
   "publishConfig": {
     "access": "public"
@@ -34,7 +39,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "pnpm build"
+    "prepublishOnly": "pnpm build",
+    "prepack": "cp ../../LICENSE ../../registry/NOTICE ."
   },
   "dependencies": {
     "re2js": "^2.10.0"
@@ -42,7 +48,7 @@
   "peerDependencies": {
     "@json-render/core": "^0.23.2",
     "@json-render/react": "^0.23.2",
-    "react": "^19",
+    "react": "^19.2.3",
     "zod": "^4.3.6"
   },
   "peerDependenciesMeta": {

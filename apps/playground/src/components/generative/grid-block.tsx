@@ -1,7 +1,7 @@
 'use client'
 
-import { Grid as GridDef } from '@gencn/core'
-import { defineBlock } from '@gencn/core/react'
+import { Grid as GridDef } from 'gencn'
+import { defineBlock } from 'gencn/react'
 import { cn } from '@/lib/utils'
 
 const columns = {

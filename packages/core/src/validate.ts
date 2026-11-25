@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { autoFixSpec, getByPath, validateSpec } from '@json-render/core'
 import type { BlockDef } from './block.js'
 import { CALL_TOOL, type Catalog } from './catalog.js'
-import { toolCalls } from './calls.js'
+import { bindable, bindingsIn, toolCalls } from './calls.js'
 import { extract, patternProblem } from './extract.js'
 import { refreshSchema, type Spec } from './spec.js'
 
@@ -14,6 +14,7 @@ export type BlockIssue = {
     | 'unknown_event'
     | 'unknown_action'
     | 'call_tool_placement'
+    | 'built_in_confirm'
     | 'call_tool_name'
     | 'switch_binding'
   elementKey: string
@@ -40,24 +41,13 @@ function parseProps(block: BlockDef, props: Record<string, unknown>) {
   return z.strictObject(shape).safeParse(without(props))
 }
 
-/** How many `{ action: "callTool" }` objects `value` holds, at any depth. */
-function callToolsIn(value: unknown): number {
-  if (Array.isArray(value))
-    return value.reduce((n, item) => n + callToolsIn(item), 0)
-  if (typeof value !== 'object' || value === null) return 0
-  const own = (value as { action?: unknown }).action === CALL_TOOL ? 1 : 0
-  return (
-    own +
-    Object.values(value).reduce<number>((n, item) => n + callToolsIn(item), 0)
-  )
-}
-
 /**
  * Checks what json-render's own validation doesn't: each element's props
  * against its block (strict: no `className`), its events, the actions they
  * name, and gencn's rules: `callTool` runs only from an element's events,
- * which are always a person's (never `watch`, a chained `onSuccess` or
- * anything else that fires by itself), names a tool or a `$cond` between
+ * which are always a person's, and what those bindings chain
+ * (`onSuccess`, `onError`), never `watch` or anything else that fires by
+ * itself; `confirm` only on `callTool` (a view asks through its host), names a tool or a `$cond` between
  * names, and a Switch binds turnOn/turnOff or change, not both.
  */
 export function validateBlocks(catalog: Catalog, spec: Spec): BlockIssue[] {
@@ -102,20 +92,28 @@ export function validateBlocks(catalog: Catalog, spec: Spec): BlockIssue[] {
     }
   }
 
-  const direct = Object.values(spec.elements).reduce(
-    (n, { on }) =>
-      n +
-      Object.values(on ?? {})
-        .flatMap((bound) => [bound].flat())
-        .filter(({ action }) => action === CALL_TOOL).length,
+  // Anything that runs by itself, such as watch, is outside every "on".
+  const calls = (value: unknown) =>
+    bindingsIn(value).filter(({ action }) => action === CALL_TOOL).length
+  const inEvents = Object.values(spec.elements).reduce(
+    (n, { on }) => n + calls(on),
     0,
   )
-  if (callToolsIn(spec) > direct) {
+  if (calls(bindable(spec)) > inEvents) {
     report(
       'call_tool_placement',
       spec.root,
-      `${CALL_TOOL} may only be bound directly to an element's event in "on", never in watch, onSuccess, onError or anywhere that runs by itself.`,
+      `${CALL_TOOL} may only be bound in an element's "on" (or what that binding chains, onSuccess and onError), never in watch or anything else that runs by itself.`,
     )
+  }
+  for (const binding of bindingsIn(bindable(spec))) {
+    if (builtIns.includes(binding.action) && 'confirm' in binding) {
+      report(
+        'built_in_confirm',
+        spec.root,
+        `confirm works only on ${CALL_TOOL}; remove it from ${binding.action}.`,
+      )
+    }
   }
   for (const call of toolCalls(spec)) {
     if (!call.tools) {

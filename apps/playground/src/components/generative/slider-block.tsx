@@ -1,7 +1,7 @@
 'use client'
 
-import { Slider as SliderDef } from '@gencn/core'
-import { defineBlock } from '@gencn/core/react'
+import { Slider as SliderDef } from 'gencn'
+import { defineBlock } from 'gencn/react'
 import { useId, useState } from 'react'
 import { useBoundProp } from '@json-render/react'
 import { Field, FieldLabel } from '@/components/ui/field'

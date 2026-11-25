@@ -3,7 +3,22 @@ import type * as blocks from './blocks/index.js'
 export * from './blocks/index.js'
 export { defineBlockDef, gap, type BlockDef, type PropsOf } from './block.js'
 export { CALL_TOOL, createCatalog, type Catalog } from './catalog.js'
+export {
+  createViewActor,
+  ViewCallError,
+  type ActionOutcome,
+  type Args,
+  type CallOptions,
+  type GencnPhase,
+  type Notice,
+  type OnAction,
+  type OnRead,
+  type Unavailable,
+  type ViewActor,
+  type ViewHost,
+} from './actor.js'
 export { toolCalls, viewTools, type ToolCall } from './calls.js'
+export { moveConfirms } from './confirm.js'
 export {
   extract,
   extractedState,

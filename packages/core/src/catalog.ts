@@ -16,8 +16,8 @@ const callToolParams = z.object({
 
 /**
  * The blocks an app generates views from, listed one by one: never spread
- * `@gencn/core`, or an update would offer blocks the app hasn't installed.
- * Its React half is `createBlocks(catalog, [...])` from `@gencn/core/react`.
+ * `gencn`, or an update would offer blocks the app hasn't installed.
+ * Its React half is `createBlocks(catalog, [...])` from `gencn/react`.
  */
 export type Catalog<Defs extends readonly BlockDef[] = readonly BlockDef[]> = {
   blocks: Defs

@@ -1,7 +1,7 @@
 'use client'
 
-import { Image as ImageDef } from '@gencn/core'
-import { defineBlock } from '@gencn/core/react'
+import { Image as ImageDef } from 'gencn'
+import { defineBlock } from 'gencn/react'
 import { cn } from '@/lib/utils'
 
 const aspects = { auto: '', square: 'aspect-square', video: 'aspect-video' }

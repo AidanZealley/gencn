@@ -1,7 +1,7 @@
 'use client'
 
-import { Badge as BadgeDef } from '@gencn/core'
-import { defineBlock } from '@gencn/core/react'
+import { Badge as BadgeDef } from 'gencn'
+import { defineBlock } from 'gencn/react'
 import { Badge } from '@/components/ui/badge'
 
 // Adapted from @json-render/shadcn (Apache-2.0), github.com/vercel-labs/json-render.

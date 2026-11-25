@@ -1,7 +1,7 @@
 'use client'
 
-import { Stack as StackDef } from '@gencn/core'
-import { defineBlock } from '@gencn/core/react'
+import { Stack as StackDef } from 'gencn'
+import { defineBlock } from 'gencn/react'
 import { cn } from '@/lib/utils'
 
 const gap = { sm: 'gap-2', md: 'gap-4', lg: 'gap-6' }

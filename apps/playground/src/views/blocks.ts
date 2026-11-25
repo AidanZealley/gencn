@@ -1,6 +1,6 @@
 // The installed component for every block in the catalog: a block missing
 // here, or one the catalog doesn't list, doesn't compile.
-import { createBlocks } from '@gencn/core/react'
+import { createBlocks } from 'gencn/react'
 import { badgeBlock } from '@/components/generative/badge-block'
 import { buttonBlock } from '@/components/generative/button-block'
 import { cardBlock } from '@/components/generative/card-block'

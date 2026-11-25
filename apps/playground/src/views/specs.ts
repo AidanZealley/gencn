@@ -1,4 +1,4 @@
-import type { Spec } from '@gencn/core'
+import type { Spec } from 'gencn'
 
 const cat =
   'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/' +
@@ -24,7 +24,15 @@ const livingRoom: Spec = {
     room: {
       type: 'Card',
       props: { title: 'Living room', description: 'Lights and heating' },
-      children: ['desk', 'brightness', 'porch', 'divider', 'mode', 'cat'],
+      children: [
+        'desk',
+        'brightness',
+        'porch',
+        'divider',
+        'mode',
+        'off',
+        'cat',
+      ],
     },
     desk: {
       type: 'Switch',
@@ -116,6 +124,28 @@ const livingRoom: Spec = {
             tool: 'HassClimateSetMode',
             args: { name: 'Thermostat', mode: { $state: '/heating/mode' } },
           },
+        },
+      },
+      children: [],
+    },
+    // json-render's own lifecycle: confirm first, then onSuccess sets the
+    // switch, since a button has no bound state of its own.
+    off: {
+      type: 'Button',
+      props: { label: 'Lamp off for the night', variant: 'outline' },
+      on: {
+        press: {
+          action: 'callTool',
+          params: {
+            tool: 'HassTurnOff',
+            args: { name: 'Desk Lamp', domain: ['light'] },
+          },
+          confirm: {
+            title: 'Turn the desk lamp off?',
+            message: 'It is at ${/desk/brightness}%.',
+            confirmLabel: 'Turn off',
+          },
+          onSuccess: { set: { '/desk/on': false } },
         },
       },
       children: [],

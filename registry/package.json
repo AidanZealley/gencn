@@ -7,9 +7,9 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@gencn/core": "workspace:*",
     "@json-render/react": "0.23.2",
     "@types/react": "^19",
+    "gencn": "workspace:*",
     "react": "^19.3.1",
     "shadcn": "^4.23.0"
   }
