@@ -1,7 +1,8 @@
 import { z } from 'zod'
-import { gap, type Block } from '../block.js'
+import { defineBlockDef, gap } from '../block.js'
 
-export const Card = {
+export const Card = defineBlockDef({
+  name: 'Card',
   description:
     'A bordered surface for one subject, such as a device, a room or ' +
     'a result. Usually the root. Children stack vertically.',
@@ -11,9 +12,10 @@ export const Card = {
   }),
   slots: ['default'],
   example: { title: 'Living room' },
-} satisfies Block
+})
 
-export const Stack = {
+export const Stack = defineBlockDef({
+  name: 'Stack',
   description:
     'Arranges children in a row or column. Use a row with ' +
     'justify "between" for a label on the left and a value on the right.',
@@ -25,9 +27,10 @@ export const Stack = {
   }),
   slots: ['default'],
   example: { direction: 'vertical', gap: 'md' },
-} satisfies Block
+})
 
-export const Grid = {
+export const Grid = defineBlockDef({
+  name: 'Grid',
   description:
     'Lays children out in equal columns, filling row by row. ' +
     'For several things of the same kind, such as stats or photos.',
@@ -39,9 +42,10 @@ export const Grid = {
   }),
   slots: ['default'],
   example: { columns: 2, gap: 'md' },
-} satisfies Block
+})
 
-export const Separator = {
+export const Separator = defineBlockDef({
+  name: 'Separator',
   description: 'A horizontal line between groups of content.',
   props: z.object({}),
-} satisfies Block
+})

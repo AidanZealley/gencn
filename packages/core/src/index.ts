@@ -1,17 +1,31 @@
-import type { z } from 'zod'
 import type * as blocks from './blocks/index.js'
 
 export * from './blocks/index.js'
-export type { Block } from './block.js'
-export { checkSpec, validateBlocks, type BlockIssue } from './validate.js'
+export { defineBlockDef, gap, type BlockDef, type PropsOf } from './block.js'
+export { CALL_TOOL, createCatalog, type Catalog } from './catalog.js'
+export { toolCalls, viewTools, type ToolCall } from './calls.js'
+export {
+  extract,
+  extractedState,
+  patternProblem,
+  type Extracted,
+} from './extract.js'
 export { toolPrompt } from './prompt.js'
+export {
+  refreshSchema,
+  type Extraction,
+  type Refresh,
+  type Spec,
+} from './spec.js'
+export {
+  autoFix,
+  checkRefresh,
+  checkSpec,
+  isExpression,
+  validateBlocks,
+  type BlockIssue,
+} from './validate.js'
 
-/**
- * Every block by name, as a type only: an app's catalog lists the blocks it
- * has installed, so there's deliberately no runtime map to spread.
- */
+/** Every block gencn defines, by name, as a type only. */
 export type Blocks = typeof blocks
 export type BlockName = keyof Blocks
-
-/** A block's props after parsing, for typing its component. */
-export type BlockProps<K extends BlockName> = z.output<Blocks[K]['props']>

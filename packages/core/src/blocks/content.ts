@@ -1,7 +1,8 @@
 import { z } from 'zod'
-import type { Block } from '../block.js'
+import { defineBlockDef } from '../block.js'
 
-export const Heading = {
+export const Heading = defineBlockDef({
+  name: 'Heading',
   description:
     'A title for a section. Level 1 is the largest. A Card title ' +
     'usually makes a level 1 heading unnecessary.',
@@ -10,18 +11,20 @@ export const Heading = {
     level: z.union([z.literal(1), z.literal(2), z.literal(3)]).optional(),
   }),
   example: { text: 'Lights', level: 2 },
-} satisfies Block
+})
 
-export const Text = {
+export const Text = defineBlockDef({
+  name: 'Text',
   description: 'A paragraph of text. Muted for secondary details.',
   props: z.object({
     text: z.string(),
     tone: z.enum(['default', 'muted']).optional(),
   }),
   example: { text: 'Both lamps are on.' },
-} satisfies Block
+})
 
-export const Image = {
+export const Image = defineBlockDef({
+  name: 'Image',
   description:
     'Shows a picture. src must be a URL from a tool result or an ' +
     'existing image; never invent one.',
@@ -31,9 +34,10 @@ export const Image = {
     aspect: z.enum(['auto', 'square', 'video']).optional(),
   }),
   example: { src: 'https://example.com/cat.jpg', alt: 'A cat' },
-} satisfies Block
+})
 
-export const Stat = {
+export const Stat = defineBlockDef({
+  name: 'Stat',
   description:
     'A value to read at a glance, such as a temperature or a count, ' +
     'with a label and an optional unit and caption.',
@@ -44,9 +48,10 @@ export const Stat = {
     caption: z.string().optional(),
   }),
   example: { label: 'Temperature', value: 21.5, unit: '°C' },
-} satisfies Block
+})
 
-export const Badge = {
+export const Badge = defineBlockDef({
+  name: 'Badge',
   description:
     'A short status label, such as "Online" or "Low battery". ' +
     'Destructive for problems.',
@@ -57,4 +62,4 @@ export const Badge = {
       .optional(),
   }),
   example: { text: 'Online', variant: 'secondary' },
-} satisfies Block
+})
