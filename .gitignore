@@ -1,0 +1,5 @@
+/.plans/
+node_modules/
+dist/
+# Built by `pnpm --filter @gencn/registry build`
+apps/playground/public/r/

@@ -1,0 +1,240 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "gencn",
+  "homepage": "http://localhost:5173",
+  "items": [
+    {
+      "name": "card-block",
+      "type": "registry:component",
+      "title": "Card block",
+      "description": "Renders the Card block from @gencn/core with your own shadcn components.",
+      "dependencies": ["@json-render/react"],
+      "registryDependencies": ["card"],
+      "files": [
+        {
+          "path": "blocks/card-block.tsx",
+          "type": "registry:component",
+          "target": "components/generative/card-block.tsx"
+        }
+      ],
+      "meta": {
+        "block": "Card"
+      }
+    },
+    {
+      "name": "stack-block",
+      "type": "registry:component",
+      "title": "Stack block",
+      "description": "Renders the Stack block from @gencn/core with your own shadcn components.",
+      "dependencies": ["@json-render/react"],
+      "registryDependencies": ["utils"],
+      "files": [
+        {
+          "path": "blocks/stack-block.tsx",
+          "type": "registry:component",
+          "target": "components/generative/stack-block.tsx"
+        }
+      ],
+      "meta": {
+        "block": "Stack"
+      }
+    },
+    {
+      "name": "grid-block",
+      "type": "registry:component",
+      "title": "Grid block",
+      "description": "Renders the Grid block from @gencn/core with your own shadcn components.",
+      "dependencies": ["@json-render/react"],
+      "registryDependencies": ["utils"],
+      "files": [
+        {
+          "path": "blocks/grid-block.tsx",
+          "type": "registry:component",
+          "target": "components/generative/grid-block.tsx"
+        }
+      ],
+      "meta": {
+        "block": "Grid"
+      }
+    },
+    {
+      "name": "separator-block",
+      "type": "registry:component",
+      "title": "Separator block",
+      "description": "Renders the Separator block from @gencn/core with your own shadcn components.",
+      "dependencies": ["@json-render/react"],
+      "registryDependencies": ["separator"],
+      "files": [
+        {
+          "path": "blocks/separator-block.tsx",
+          "type": "registry:component",
+          "target": "components/generative/separator-block.tsx"
+        }
+      ],
+      "meta": {
+        "block": "Separator"
+      }
+    },
+    {
+      "name": "heading-block",
+      "type": "registry:component",
+      "title": "Heading block",
+      "description": "Renders the Heading block from @gencn/core with your own shadcn components.",
+      "dependencies": ["@json-render/react"],
+      "files": [
+        {
+          "path": "blocks/heading-block.tsx",
+          "type": "registry:component",
+          "target": "components/generative/heading-block.tsx"
+        }
+      ],
+      "meta": {
+        "block": "Heading"
+      }
+    },
+    {
+      "name": "text-block",
+      "type": "registry:component",
+      "title": "Text block",
+      "description": "Renders the Text block from @gencn/core with your own shadcn components.",
+      "dependencies": ["@json-render/react"],
+      "files": [
+        {
+          "path": "blocks/text-block.tsx",
+          "type": "registry:component",
+          "target": "components/generative/text-block.tsx"
+        }
+      ],
+      "meta": {
+        "block": "Text"
+      }
+    },
+    {
+      "name": "image-block",
+      "type": "registry:component",
+      "title": "Image block",
+      "description": "Renders the Image block from @gencn/core with your own shadcn components.",
+      "dependencies": ["@json-render/react"],
+      "registryDependencies": ["utils"],
+      "files": [
+        {
+          "path": "blocks/image-block.tsx",
+          "type": "registry:component",
+          "target": "components/generative/image-block.tsx"
+        }
+      ],
+      "meta": {
+        "block": "Image"
+      }
+    },
+    {
+      "name": "stat-block",
+      "type": "registry:component",
+      "title": "Stat block",
+      "description": "Renders the Stat block from @gencn/core with your own shadcn components.",
+      "dependencies": ["@json-render/react"],
+      "files": [
+        {
+          "path": "blocks/stat-block.tsx",
+          "type": "registry:component",
+          "target": "components/generative/stat-block.tsx"
+        }
+      ],
+      "meta": {
+        "block": "Stat"
+      }
+    },
+    {
+      "name": "badge-block",
+      "type": "registry:component",
+      "title": "Badge block",
+      "description": "Renders the Badge block from @gencn/core with your own shadcn components.",
+      "dependencies": ["@json-render/react"],
+      "registryDependencies": ["badge"],
+      "files": [
+        {
+          "path": "blocks/badge-block.tsx",
+          "type": "registry:component",
+          "target": "components/generative/badge-block.tsx"
+        }
+      ],
+      "meta": {
+        "block": "Badge"
+      }
+    },
+    {
+      "name": "switch-block",
+      "type": "registry:component",
+      "title": "Switch block",
+      "description": "Renders the Switch block from @gencn/core with your own shadcn components.",
+      "dependencies": ["@json-render/react"],
+      "registryDependencies": ["field", "switch"],
+      "files": [
+        {
+          "path": "blocks/switch-block.tsx",
+          "type": "registry:component",
+          "target": "components/generative/switch-block.tsx"
+        }
+      ],
+      "meta": {
+        "block": "Switch"
+      }
+    },
+    {
+      "name": "slider-block",
+      "type": "registry:component",
+      "title": "Slider block",
+      "description": "Renders the Slider block from @gencn/core with your own shadcn components.",
+      "dependencies": ["@json-render/react"],
+      "registryDependencies": ["field", "slider"],
+      "files": [
+        {
+          "path": "blocks/slider-block.tsx",
+          "type": "registry:component",
+          "target": "components/generative/slider-block.tsx"
+        }
+      ],
+      "meta": {
+        "block": "Slider",
+        "library": "base"
+      }
+    },
+    {
+      "name": "select-block",
+      "type": "registry:component",
+      "title": "Select block",
+      "description": "Renders the Select block from @gencn/core with your own shadcn components.",
+      "dependencies": ["@json-render/react"],
+      "registryDependencies": ["field", "select"],
+      "files": [
+        {
+          "path": "blocks/select-block.tsx",
+          "type": "registry:component",
+          "target": "components/generative/select-block.tsx"
+        }
+      ],
+      "meta": {
+        "block": "Select",
+        "library": "base"
+      }
+    },
+    {
+      "name": "button-block",
+      "type": "registry:component",
+      "title": "Button block",
+      "description": "Renders the Button block from @gencn/core with your own shadcn components.",
+      "dependencies": ["@json-render/react"],
+      "registryDependencies": ["button"],
+      "files": [
+        {
+          "path": "blocks/button-block.tsx",
+          "type": "registry:component",
+          "target": "components/generative/button-block.tsx"
+        }
+      ],
+      "meta": {
+        "block": "Button"
+      }
+    }
+  ]
+}

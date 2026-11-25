@@ -1,0 +1,29 @@
+{
+  "name": "@gencn/core",
+  "version": "0.0.0",
+  "description": "Behaviour-described block definitions for json-render catalogs.",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@json-render/core": "^0.23.2",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@json-render/core": "0.23.2",
+    "@json-render/react": "0.23.2",
+    "zod": "4.6.7"
+  }
+}
