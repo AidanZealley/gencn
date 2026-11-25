@@ -1,11 +1,13 @@
-import type { BlockProps } from '@gencn/core'
-import type { BaseComponentProps } from '@json-render/react'
+'use client'
+
+import { Image as ImageDef } from '@gencn/core'
+import { defineBlock } from '@gencn/core/react'
 import { cn } from '@/lib/utils'
 
 const aspects = { auto: '', square: 'aspect-square', video: 'aspect-video' }
 
 // Adapted from @json-render/shadcn (Apache-2.0), github.com/vercel-labs/json-render.
-export function ImageBlock({ props }: BaseComponentProps<BlockProps<'Image'>>) {
+export const imageBlock = defineBlock(ImageDef, function ImageBlock({ props }) {
   return (
     <img
       src={props.src}
@@ -17,4 +19,4 @@ export function ImageBlock({ props }: BaseComponentProps<BlockProps<'Image'>>) {
       )}
     />
   )
-}
+})

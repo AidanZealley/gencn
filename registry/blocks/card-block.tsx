@@ -1,5 +1,7 @@
-import type { BlockProps } from '@gencn/core'
-import type { BaseComponentProps } from '@json-render/react'
+'use client'
+
+import { Card as CardDef } from '@gencn/core'
+import { defineBlock } from '@gencn/core/react'
 import {
   Card,
   CardContent,
@@ -9,20 +11,20 @@ import {
 } from '@/components/ui/card'
 
 // Adapted from @json-render/shadcn (Apache-2.0), github.com/vercel-labs/json-render.
-export function CardBlock({
-  props,
-  children,
-}: BaseComponentProps<BlockProps<'Card'>>) {
-  const { title, description } = props
-  return (
-    <Card>
-      {(title || description) && (
-        <CardHeader>
-          {title && <CardTitle>{title}</CardTitle>}
-          {description && <CardDescription>{description}</CardDescription>}
-        </CardHeader>
-      )}
-      <CardContent className="flex flex-col gap-4">{children}</CardContent>
-    </Card>
-  )
-}
+export const cardBlock = defineBlock(
+  CardDef,
+  function CardBlock({ props, children }) {
+    const { title, description } = props
+    return (
+      <Card>
+        {(title || description) && (
+          <CardHeader>
+            {title && <CardTitle>{title}</CardTitle>}
+            {description && <CardDescription>{description}</CardDescription>}
+          </CardHeader>
+        )}
+        <CardContent className="flex flex-col gap-4">{children}</CardContent>
+      </Card>
+    )
+  },
+)

@@ -1,5 +1,7 @@
-import type { BlockProps } from '@gencn/core'
-import type { BaseComponentProps } from '@json-render/react'
+'use client'
+
+import { Heading as HeadingDef } from '@gencn/core'
+import { defineBlock } from '@gencn/core/react'
 
 const levels = {
   1: { Tag: 'h2', className: 'text-lg font-semibold' },
@@ -8,9 +10,10 @@ const levels = {
 } as const
 
 // Adapted from @json-render/shadcn (Apache-2.0), github.com/vercel-labs/json-render.
-export function HeadingBlock({
-  props,
-}: BaseComponentProps<BlockProps<'Heading'>>) {
-  const { Tag, className } = levels[props.level ?? 2]
-  return <Tag className={`font-heading ${className}`}>{props.text}</Tag>
-}
+export const headingBlock = defineBlock(
+  HeadingDef,
+  function HeadingBlock({ props }) {
+    const { Tag, className } = levels[props.level ?? 2]
+    return <Tag className={`font-heading ${className}`}>{props.text}</Tag>
+  },
+)

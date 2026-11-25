@@ -1,7 +1,9 @@
-import type { BlockProps } from '@gencn/core'
-import type { BaseComponentProps } from '@json-render/react'
+'use client'
 
-export function StatBlock({ props }: BaseComponentProps<BlockProps<'Stat'>>) {
+import { Stat as StatDef } from '@gencn/core'
+import { defineBlock } from '@gencn/core/react'
+
+export const statBlock = defineBlock(StatDef, function StatBlock({ props }) {
   const { label, value, unit, caption } = props
   return (
     <div className="flex flex-col gap-1">
@@ -19,4 +21,4 @@ export function StatBlock({ props }: BaseComponentProps<BlockProps<'Stat'>>) {
       )}
     </div>
   )
-}
+})

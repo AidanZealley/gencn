@@ -1,5 +1,7 @@
-import type { BlockProps } from '@gencn/core'
-import type { BaseComponentProps } from '@json-render/react'
+'use client'
+
+import { Grid as GridDef } from '@gencn/core'
+import { defineBlock } from '@gencn/core/react'
 import { cn } from '@/lib/utils'
 
 const columns = {
@@ -11,19 +13,19 @@ const columns = {
 const gap = { sm: 'gap-2', md: 'gap-4', lg: 'gap-6' }
 
 // Adapted from @json-render/shadcn (Apache-2.0), github.com/vercel-labs/json-render.
-export function GridBlock({
-  props,
-  children,
-}: BaseComponentProps<BlockProps<'Grid'>>) {
-  return (
-    <div
-      className={cn(
-        'grid',
-        columns[props.columns ?? 2],
-        gap[props.gap ?? 'md'],
-      )}
-    >
-      {children}
-    </div>
-  )
-}
+export const gridBlock = defineBlock(
+  GridDef,
+  function GridBlock({ props, children }) {
+    return (
+      <div
+        className={cn(
+          'grid',
+          columns[props.columns ?? 2],
+          gap[props.gap ?? 'md'],
+        )}
+      >
+        {children}
+      </div>
+    )
+  },
+)
