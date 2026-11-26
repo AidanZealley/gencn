@@ -55,35 +55,43 @@ export function patternProblem(pattern: string) {
  */
 export function extract(output: string, refresh: Refresh): Extracted[] {
   const text = source(output, refresh.from)
-  return Object.entries(refresh.extract).map(([path, { match, map, as }]) => {
-    if (text === undefined) {
-      return { path, problem: `nothing at ${refresh.from} in the output` }
-    }
-    const problem = patternProblem(match)
-    if (problem) return { path, problem: `match ${problem}` }
-    const matcher = RE2JS.compile(match).matcher(text)
-    if (!matcher.find()) {
-      return { path, problem: `match ${JSON.stringify(match)} found nothing` }
-    }
-    const snippet = text.slice(matcher.start(), matcher.end())
-    const captured = matcher.group(1) ?? ''
-    if (map) {
-      return Object.hasOwn(map, captured)
-        ? { path, value: map[captured], snippet }
-        : {
-            path,
-            snippet,
-            problem: `read "${captured}", which map doesn't list`,
-          }
-    }
-    if (as === 'number') {
-      // Decimal digits only: no hex, exponents, spaces or Infinity.
-      return /^-?\d+(\.\d+)?$/.test(captured)
-        ? { path, value: Number(captured), snippet }
-        : { path, snippet, problem: `read "${captured}", not a number` }
-    }
-    return { path, value: captured, snippet }
-  })
+  return Object.entries(refresh.extract).map(
+    ([path, { match, map, as, scale }]) => {
+      if (text === undefined) {
+        return { path, problem: `nothing at ${refresh.from} in the output` }
+      }
+      const problem = patternProblem(match)
+      if (problem) return { path, problem: `match ${problem}` }
+      const matcher = RE2JS.compile(match).matcher(text)
+      if (!matcher.find()) {
+        return { path, problem: `match ${JSON.stringify(match)} found nothing` }
+      }
+      const snippet = text.slice(matcher.start(), matcher.end())
+      const captured = matcher.group(1) ?? ''
+      if (map) {
+        return Object.hasOwn(map, captured)
+          ? { path, value: map[captured], snippet }
+          : {
+              path,
+              snippet,
+              problem: `read "${captured}", which map doesn't list`,
+            }
+      }
+      if (as === 'number' || scale) {
+        // Decimal digits only: no hex, exponents, spaces or Infinity.
+        if (!/^-?\d+(\.\d+)?$/.test(captured)) {
+          return { path, snippet, problem: `read "${captured}", not a number` }
+        }
+        const value = Number(captured)
+        return {
+          path,
+          value: scale ? Math.round((value * scale[1]) / scale[0]) : value,
+          snippet,
+        }
+      }
+      return { path, value: captured, snippet }
+    },
+  )
 }
 
 /** Every value `extract` read, by state path, or undefined if any is missing. */

@@ -9,6 +9,13 @@ export type Extraction = {
   map?: Record<string, unknown>
   /** The captured text as is (default), or as a number. */
   as?: 'number' | 'text'
+  /**
+   * `[read, shown]`: a number read in other units than the view uses,
+   * such as `[255, 100]` for a 0–255 brightness shown as a percentage. The
+   * value becomes value × shown ÷ read, rounded to a whole number.
+   * Implies `as: 'number'`.
+   */
+  scale?: [number, number]
 }
 
 /**
@@ -42,6 +49,9 @@ export const refreshSchema = z.strictObject({
         match: z.string().min(1),
         map: z.record(z.string(), z.unknown()).optional(),
         as: z.enum(['number', 'text']).optional(),
+        scale: z
+          .tuple([z.number().positive(), z.number().positive()])
+          .optional(),
       }),
     )
     .refine((extract) => Object.keys(extract).length > 0, {
