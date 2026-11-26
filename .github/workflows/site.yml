@@ -1,0 +1,51 @@
+name: Site
+
+# Builds the site (landing page, docs, registry and playground) on pull
+# requests, and deploys main to GitHub Pages at aidanzealley.github.io/gencn.
+# Needs Settings > Pages > Source set to GitHub Actions.
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One deployment at a time, without cancelling one already under way.
+concurrency:
+  group: site-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24.19.0'
+      - uses: pnpm/action-setup@v6
+      - run: pnpm install --frozen-lockfile
+      # gencn, then the registry and playground into the site's public/,
+      # then the site; fails on any broken internal link.
+      - run: pnpm build
+      - if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: apps/site/dist/
+
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

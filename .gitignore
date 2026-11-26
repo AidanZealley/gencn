@@ -2,5 +2,7 @@
 /.design/
 node_modules/
 dist/
-# Built by `pnpm --filter @gencn/registry build`
-apps/playground/public/r/
+# Built by the site's `pnpm embeds`
+apps/site/public/r/
+apps/site/public/playground/
+.astro/

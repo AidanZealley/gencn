@@ -1,5 +1,8 @@
 pnpm-lock.yaml
-apps/playground/public/r/
+apps/site/public/r/
+apps/site/public/playground/
+apps/site/dist/
+apps/site/.astro/
 apps/playground/dist/
 packages/core/dist/
 # Written by the shadcn CLI, so it can update them.

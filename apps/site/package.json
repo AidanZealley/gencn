@@ -1,0 +1,26 @@
+{
+  "name": "@gencn/site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm embeds && astro dev --host",
+    "build": "pnpm embeds && astro build && node scripts/check-links.ts",
+    "embeds": "pnpm --filter @gencn/registry build && pnpm --filter @gencn/playground build --base=/gencn/playground/ --outDir=../site/public/playground --emptyOutDir",
+    "preview": "astro preview --host",
+    "typecheck": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "0.42.7",
+    "@fontsource-variable/geist": "^5.3.0",
+    "@fontsource-variable/geist-mono": "^5.3.0",
+    "astro": "7.4.4",
+    "gencn": "workspace:*",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.12",
+    "@gencn/playground": "workspace:*",
+    "@gencn/registry": "workspace:*",
+    "typescript": "~6.0.3"
+  }
+}
