@@ -2,6 +2,8 @@ import type * as blocks from './blocks/index.js'
 
 export * from './blocks/index.js'
 export { defineBlockDef, gap, type BlockDef, type PropsOf } from './block.js'
+// gencn's own zod, for apps writing their own blocks: one copy, one version.
+export { z } from 'zod'
 export { CALL_TOOL, createCatalog, type Catalog } from './catalog.js'
 export {
   createViewActor,

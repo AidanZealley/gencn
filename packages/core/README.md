@@ -11,7 +11,7 @@ controls call your functions, never the model.
 - `gencn/react`: `defineBlock`, `createBlocks` and `useGencnView`.
 
 ```sh
-pnpm add gencn @json-render/core @json-render/react zod
+pnpm add gencn
 ```
 
 Map the registry in `components.json`, then install blocks with the shadcn
@@ -41,6 +41,7 @@ that needs approval asks in your own UI, inside `onAction`. `onRead`
 returns a read tool's text, which the spec's `refresh` extracts state
 from. The hook returns codes, not words: your app words them.
 
-Peers: `@json-render/core`, `@json-render/react` and `zod`, plus `react`
-for `gencn/react`. Server-only hosts install `@json-render/react` too (the
-root entry uses its spec schema), but never load React.
+json-render and zod come with gencn. Blocks import `useBoundProp` from
+`gencn/react`, and your own blocks' props use the `z` gencn exports, so the
+app never needs its own copy. `react` is an optional peer, for
+`gencn/react` only: a server-only host never loads React.

@@ -2,8 +2,7 @@
 // Every block gencn defines, read from the package itself, so this list
 // can't drift from it.
 import * as gencn from 'gencn'
-import type { BlockDef } from 'gencn'
-import { z } from 'zod'
+import { z, type BlockDef } from 'gencn'
 
 const defs = (Object.values(gencn) as unknown[]).filter(
   (value): value is BlockDef =>
