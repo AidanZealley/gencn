@@ -208,4 +208,50 @@ const repository = 'https://github.com/AidanZealley/gencn'
       min-height: 35rem;
     }
   }
+
+  /* Phones held upright: one screen, no scrolling. The demo takes the
+     space the header and tagline leave. */
+  @media (max-width: 59.99rem) and (orientation: portrait) {
+    :global(body) {
+      display: flex;
+      flex-direction: column;
+      height: 100svh;
+      overflow: hidden;
+    }
+
+    /* Auto side margins would shrink them to their content in a column. */
+    .top {
+      width: 100%;
+    }
+
+    .hero {
+      width: 100%;
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      padding-block: 0;
+    }
+
+    .demo {
+      flex: 1;
+      min-height: 0;
+      height: auto;
+    }
+
+    .pitch {
+      padding-block: 1.5rem 2.5rem;
+    }
+
+    .mark {
+      width: 2.5rem;
+      height: 2.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .cta {
+      margin-top: 1.5rem;
+    }
+  }
 </style>
