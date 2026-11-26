@@ -7,12 +7,13 @@ block's look comes from a shadcn registry item installed into your app.
 - `packages/core`: the `gencn` package. Its root entry is React-free:
   block definitions, `createCatalog`, `toolPrompt`, `checkSpec`,
   `checkRefresh`, `extract` and `createViewActor`. `gencn/react` draws
-  views: `defineBlock`, `createBlocks`, `useGencnView`, `<GencnView>`.
+  views: `defineBlock`, `createBlocks` and `useGencnView`.
 - `registry`: one shadcn registry item per block (`registry.json`,
   `blocks/*.tsx`). Its build writes to `apps/site/public/r/`, flat and
   under every shadcn style folder.
 - `apps/playground`: Vite app that renders hand-written specs against a
-  pretend Home Assistant, with the hook and with `<GencnView>`. Its
+  pretend Home Assistant, drawn with the hook, and asks for approval
+  in its own UI. Its
   `demo.html` is the landing page's demo, a scripted chat played through
   real shadcn themes (`scripts/themes.ts` fetches them into
   `src/demo/themes.css`).

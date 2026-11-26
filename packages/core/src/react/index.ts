@@ -8,5 +8,4 @@ export {
   type ExactCover,
   type ViewBlocks,
 } from './blocks.js'
-export { GencnView, type GencnViewProps } from './GencnView.js'
 export { useGencnView, type GencnViewOptions } from './useGencnView.js'

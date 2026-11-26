@@ -33,10 +33,10 @@ Call the tool once, then call `checkRefresh(catalog, spec, output)`. It checks t
 
 ## When to read
 
-`onRead(tool, args)` returns the tool's output as text. The hook never reads by itself; call `refresh()`. `<GencnView readOn>` chooses for you:
+`onRead(tool, args)` returns the tool's output as text. The hook's `readOn` option chooses when it's called:
 
-- `visible` (default): each time the view comes on screen
+- `visible` (default): each time the element with the hook's `ref` comes on screen
 - `mount`: once
-- `manual`: only when the person presses Refresh
+- `manual`: only when you call `refresh()`, such as from a Refresh button
 
 Only use tools your app would let the model call without asking.

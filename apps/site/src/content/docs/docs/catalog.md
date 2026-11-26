@@ -33,6 +33,6 @@ Property '"Missing blocks:"' is missing … { "Missing blocks:": "Slider" }
 - The tree, block names and props: strict, so the model can't use props a block doesn't have.
 - Events, and the actions they're bound to.
 - `callTool` only runs from something a person does in an element's `on`, never from `watch`.
-- `confirm` only on `callTool`.
+- No `confirm`: a view never asks the person. Your app asks inside `onAction` (see [Approval](/gencn/docs/rendering/#approval)).
 
 It returns text written for the model, or `undefined` when the spec passes. Hosts should also check each `callTool` against their real tools and the arguments those tools take.

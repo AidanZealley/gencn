@@ -73,9 +73,12 @@ function showView(args: unknown) {
 ## Render
 
 ```tsx
-import { GencnView } from 'gencn/react'
+import { useGencnView } from 'gencn/react'
 
-;<GencnView spec={spec} blocks={blocks} onAction={runTool} />
+function View({ spec }: { spec: Spec }) {
+  const { view } = useGencnView(spec, { blocks, onAction: runTool })
+  return view
+}
 ```
 
-`runTool(tool, args)` runs one of your tools when someone uses a control. See [Rendering](/gencn/docs/rendering/).
+`runTool(tool, args)` runs one of your tools when someone uses a control. See [Rendering](/gencn/docs/rendering/) for its busy states, notices and approval.

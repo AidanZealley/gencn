@@ -1,36 +1,35 @@
-import {
-  createStateStore,
-  interpolateString,
-  type ActionConfirm,
-  type StateModel,
-} from '@json-render/core'
+import { createStateStore, type StateModel } from '@json-render/core'
 import type { Catalog } from './catalog.js'
-import { prepareCalls } from './prepare.js'
 import { extract, extractedState, type Extracted } from './extract.js'
+import { prepare } from './json-render.js'
 import type { Spec } from './spec.js'
 import { checkSpec } from './validate.js'
 
 export type Args = Record<string, unknown>
 
-/** What became of a call. `ask`: call again with `approved` once the person agrees. */
+/** What became of a call. `declined`: the host asked, and the person said no. */
 export type ActionOutcome =
   | { outcome: 'done' }
   /** `message` is the tool's own text, if any. */
   | { outcome: 'failed'; message?: string }
   | { outcome: 'unavailable'; message?: string }
-  | { outcome: 'ask' }
+  | { outcome: 'declined' }
 
 /**
  * Aborting `signal` means the view stopped waiting (it went away). It must
- * never cancel an action that started: an action runs at most once.
+ * never cancel an action that started: an action runs at most once. A host
+ * still asking the person to approve a call treats it as a no.
  */
 export type CallOptions = { signal: AbortSignal }
 
-/** Runs one tool call for the person. */
+/**
+ * Runs one tool call for the person. A call that needs approval asks here,
+ * in the host's own UI, before it runs the tool.
+ */
 export type OnAction = (
   tool: string,
   args: Args,
-  options: CallOptions & { approved?: boolean },
+  options: CallOptions,
 ) => Promise<ActionOutcome>
 
 /** Calls the refresh's read tool; resolves to its output as text. */
@@ -70,21 +69,6 @@ export type GencnPhase =
   | { kind: 'idle'; notice?: Notice }
   | { kind: 'running'; tool: string }
   | { kind: 'reading'; tool: string }
-  /** The spec asked to confirm this call; `answer` it. */
-  | {
-      kind: 'confirming'
-      tool: string
-      args: Args
-      confirm: ActionConfirm
-      answer: (confirmed: boolean) => void
-    }
-  /** The host wants this exact call approved first; `answer` it. */
-  | {
-      kind: 'asking'
-      tool: string
-      args: Args
-      answer: (approved: boolean) => void
-    }
   | ({ kind: 'unavailable' } & Unavailable)
 
 /**
@@ -155,8 +139,8 @@ export function createViewActor(
   options: ViewHost & { catalog: Catalog },
 ) {
   const refused = refusal(options.catalog, source)
-  // json-render never sees confirm on callTool, nor rethrows its failures.
-  const spec = refused ? source : prepareCalls(source)
+  // json-render never rethrows a failed call (see json-render.ts).
+  const spec = refused ? source : prepare(source)
   let host: ViewHost = options
   const store = createStateStore(spec.state ?? {})
   let confirmed = store.getSnapshot()
@@ -171,14 +155,6 @@ export function createViewActor(
     listeners.forEach((listener) => listener())
   }
   const revertTo = (state: StateModel) => store.update(writes(state))
-  /** Waits for the person to `answer` the phase `ask` makes. */
-  const ask = (make: (answer: (yes: boolean) => void) => GencnPhase) =>
-    new Promise<boolean>((resolve) => {
-      setPhase(make(resolve))
-      lifetime.signal.addEventListener('abort', () => resolve(false), {
-        once: true,
-      })
-    })
 
   // The state the running call's press left, for a busy press to go back to.
   let runningFrom: StateModel | undefined
@@ -204,47 +180,13 @@ export function createViewActor(
       return new ViewCallError(code, tool, message)
     }
     try {
-      const confirm = params.confirm as ActionConfirm | undefined
-      if (confirm) {
-        const state = store.getSnapshot()
-        const agreed = await ask((answer) => ({
-          kind: 'confirming',
-          tool,
-          args,
-          confirm: {
-            ...confirm,
-            title: interpolateString(confirm.title, state),
-            message: interpolateString(confirm.message, state),
-          },
-          answer,
-        }))
-        if (signal.aborted) throw new ViewCallError('stopped', tool)
-        if (!agreed) throw refuse('declined')
-      }
       setPhase({ kind: 'running', tool })
-      let result = await until(
+      const result = await until(
         host.onAction(tool, args, { signal }),
         signal,
         tool,
       )
       if (signal.aborted) throw new ViewCallError('stopped', tool)
-      if (result.outcome === 'ask') {
-        const approved = await ask((answer) => ({
-          kind: 'asking',
-          tool,
-          args,
-          answer,
-        }))
-        if (signal.aborted) throw new ViewCallError('stopped', tool)
-        if (!approved) throw refuse('declined')
-        setPhase({ kind: 'running', tool })
-        result = await until(
-          host.onAction(tool, args, { signal, approved }),
-          signal,
-          tool,
-        )
-        if (signal.aborted) throw new ViewCallError('stopped', tool)
-      }
       switch (result.outcome) {
         case 'done':
           confirmed = store.getSnapshot()
@@ -259,12 +201,10 @@ export function createViewActor(
             ...(result.message !== undefined && { message: result.message }),
           })
           throw new ViewCallError('unavailable', tool, result.message)
+        case 'declined':
+          throw refuse('declined')
         default:
-          // `failed`, or asked again after approval, which a host shouldn't.
-          throw refuse(
-            'failed',
-            'message' in result ? result.message : undefined,
-          )
+          throw refuse('failed', result.message)
       }
     } catch (error) {
       if (error instanceof ViewCallError) throw error
@@ -317,7 +257,7 @@ export function createViewActor(
   }
 
   return {
-    /** The spec as drawn: confirms moved into `callTool` params. */
+    /** The spec as drawn (see `prepare`). */
     spec,
     /** Why it can't be drawn, fixed at creation; undefined if it can. */
     refused,
