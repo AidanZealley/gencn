@@ -5,7 +5,7 @@ import {
   type StateModel,
 } from '@json-render/core'
 import type { Catalog } from './catalog.js'
-import { moveConfirms } from './confirm.js'
+import { prepareCalls } from './prepare.js'
 import { extract, extractedState, type Extracted } from './extract.js'
 import type { Spec } from './spec.js'
 import { checkSpec } from './validate.js'
@@ -155,8 +155,8 @@ export function createViewActor(
   options: ViewHost & { catalog: Catalog },
 ) {
   const refused = refusal(options.catalog, source)
-  // json-render never sees confirm on callTool; the handler asks instead.
-  const spec = refused ? source : moveConfirms(source)
+  // json-render never sees confirm on callTool, nor rethrows its failures.
+  const spec = refused ? source : prepareCalls(source)
   let host: ViewHost = options
   const store = createStateStore(spec.state ?? {})
   let confirmed = store.getSnapshot()

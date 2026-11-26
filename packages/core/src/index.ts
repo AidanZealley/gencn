@@ -18,7 +18,7 @@ export {
   type ViewHost,
 } from './actor.js'
 export { toolCalls, viewTools, type ToolCall } from './calls.js'
-export { moveConfirms } from './confirm.js'
+export { prepareCalls } from './prepare.js'
 export {
   extract,
   extractedState,

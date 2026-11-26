@@ -23,3 +23,11 @@ drawn). A block missing from either doesn't compile.
 `onAction(tool, args)` resolves to `done`, `failed`, `unavailable` or
 `ask`; a failed or declined call puts the controls back. `onRead` returns
 a read tool's text, which the spec's `refresh` extracts state from.
+
+`<GencnView>`'s few labels (Approve, Decline, Retry and so on) are English
+placeholders. Hosts should word views themselves: build on `useGencnView`
+and draw each phase from its codes.
+
+Peers: `@json-render/core`, `@json-render/react` and `zod`, plus `react`
+for `gencn/react`. Server-only hosts install `@json-render/react` too (the
+root entry uses its spec schema), but never load React.

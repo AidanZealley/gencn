@@ -1,8 +1,9 @@
 import { expect, test } from 'vitest'
-import { moveConfirms, type Spec } from './index.js'
+import { prepareCalls, type Spec } from './index.js'
 
-test("moveConfirms moves callTool's confirm into its params, chained ones too", () => {
+test('prepareCalls moves confirm into params and adds a no-op onError, chained calls too', () => {
   const confirm = { title: 'Unlock?', message: 'The ${/door} door' }
+  const ownError = { set: { '/error': '$error.message' } }
   const spec: Spec = {
     root: 'b',
     elements: {
@@ -24,15 +25,34 @@ test("moveConfirms moves callTool's confirm into its params, chained ones too", 
         },
         children: [],
       },
+      c: {
+        type: 'Button',
+        props: { label: 'Lock' },
+        on: {
+          press: {
+            action: 'callTool',
+            params: { tool: 'Lock' },
+            onError: ownError,
+          },
+        },
+        children: [],
+      },
     },
   }
   const before = structuredClone(spec)
-  expect(moveConfirms(spec).elements.b!.on).toEqual({
+  const ready = prepareCalls(spec)
+  expect(ready.elements.b!.on).toEqual({
     press: {
       action: 'setState',
       params: { statePath: '/x', value: 1 },
-      onSuccess: { action: 'callTool', params: { tool: 'Unlock', confirm } },
+      onSuccess: {
+        action: 'callTool',
+        params: { tool: 'Unlock', confirm },
+        onError: { set: {} },
+      },
     },
   })
+  // A spec's own onError is kept as written.
+  expect(ready.elements.c!.on).toEqual(spec.elements.c!.on)
   expect(spec).toEqual(before)
 })
