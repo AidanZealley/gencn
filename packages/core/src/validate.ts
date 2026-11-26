@@ -222,12 +222,33 @@ export function checkRefresh(catalog: Catalog, spec: Spec, output: string) {
           `- ${result.path}: read now ${JSON.stringify(result.value)}${seen}; your state says ${JSON.stringify(says)}. If the snippet is the right device, update state.`,
         ]
   })
+  const json = spec.refresh.from === undefined && jsonTextFields(output)
   return problems.length
     ? [
         "The view's refresh doesn't read back its state:",
         ...problems,
+        ...(json && json.length
+          ? [
+              `The output is JSON, so the regexes read it with its newlines escaped. Set "from" to the field holding the text: ${json.map((pointer) => JSON.stringify(pointer)).join(' or ')}.`,
+            ]
+          : []),
         '',
         REFRESH_GUIDE,
       ].join('\n')
     : undefined
+}
+
+/** JSON pointers to `output`'s top-level text fields, if it's a JSON object. */
+function jsonTextFields(output: string) {
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(output)
+  } catch {
+    return undefined
+  }
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed))
+    return undefined
+  return Object.entries(parsed)
+    .filter(([, value]) => typeof value === 'string')
+    .map(([key]) => `/${key.replaceAll('~', '~0').replaceAll('/', '~1')}`)
 }

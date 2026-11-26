@@ -128,6 +128,11 @@ test('refresh reads HA output and must agree with the initial state', () => {
   spec.refresh!.extract['/kitchen']!.match =
     "names: Porch\\n  state: '(on|off)'"
   expect(checkRefresh(catalog, spec, live)).toContain('found nothing')
+  // Without from, the regexes read the JSON around the text: say where it is.
+  delete spec.refresh!.from
+  expect(checkRefresh(catalog, spec, live)).toContain(
+    'Set "from" to the field holding the text: "/result".',
+  )
 })
 
 test("scale reads HA's 0-255 brightness as the percentage its tools take", () => {
