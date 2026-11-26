@@ -31,12 +31,23 @@ const callToolParams = z.object({
 
 /** json-render's catalog over `blocks`, with `callTool` as its one action. */
 export function jsonRenderCatalog(blocks: readonly BlockDef[]) {
+  // json-render checks props against a block's schema only when the catalog
+  // has one block, and then refuses expressions such as { $state }. Hand it
+  // open props for every block, so the check never depends on the count;
+  // validateBlocks checks props against their real schemas, expressions
+  // allowed.
+  const props = z.object({}).catchall(z.unknown())
   // json-render's entry shape, without the name; its types want mutable
   // arrays, and gencn types the blocks itself, so the config is untyped.
   const components = Object.fromEntries(
     blocks.map(({ name, slots, events, ...entry }) => [
       name,
-      { ...entry, slots: slots && [...slots], events: events && [...events] },
+      {
+        ...entry,
+        props,
+        slots: slots && [...slots],
+        events: events && [...events],
+      },
     ]),
   )
   return defineCatalog(schema, {
