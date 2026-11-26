@@ -24,6 +24,8 @@ Property '"Missing blocks:"' is missing … { "Missing blocks:": "Slider" }
 2. Add `Select` to `catalog.ts`.
 3. Add `selectBlock` to `blocks.ts`.
 
+To write a block of your own, define it with `defineBlockDef` and its props with the `z` gencn exports, so your schemas and gencn's share one zod.
+
 ## The prompt
 
 `toolPrompt(catalog)` writes what the model needs: the spec's shape, state and bindings, `callTool`, `refresh`, and one line for each block. Put your own framing around it, such as what views are for and when to show one.

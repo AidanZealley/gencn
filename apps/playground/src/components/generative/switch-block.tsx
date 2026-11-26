@@ -2,8 +2,7 @@
 
 import { useId, useState } from 'react'
 import { Switch } from 'gencn'
-import { defineBlock } from 'gencn/react'
-import { useBoundProp } from '@json-render/react'
+import { defineBlock, useBoundProp } from 'gencn/react'
 import {
   Field,
   FieldContent,

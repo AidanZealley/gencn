@@ -8,7 +8,7 @@ gencn lets an agent build small interactive UI, called **views**, out of blocks 
 ## Install
 
 ```sh
-npm install gencn @json-render/core @json-render/react zod
+npm install gencn
 ```
 
 Add gencn's registry to `components.json`:

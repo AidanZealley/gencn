@@ -32,8 +32,7 @@ pnpm test
 
 ## Using it in an app
 
-1. Install the package and its peers:
-   `pnpm add gencn @json-render/core @json-render/react zod`.
+1. Install the package: `pnpm add gencn`.
 2. Map the registry in `components.json`:
    `"registries": { "@gencn": "https://aidanzealley.github.io/gencn/r/{style}/{name}.json" }`,
    then add blocks, dry run first: `npx shadcn add @gencn/switch-block --dry-run`.
@@ -47,7 +46,7 @@ aren't published yet.
 
 To try an unpublished change in an app, depend on it with `file:`
 (`"gencn": "file:../gencn/packages/core"`), not `link:`, which would give
-the app a second zod and json-render. Run `pnpm install` again after adding
+the app a second React. Run `pnpm install` again after adding
 files to core, and clear Vite's dependency cache (`node_modules/.vite`)
 after each build, since a `file:` change doesn't invalidate it.
 

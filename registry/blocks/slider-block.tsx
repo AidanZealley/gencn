@@ -2,8 +2,7 @@
 
 import { useId, useState } from 'react'
 import { Slider } from 'gencn'
-import { defineBlock } from 'gencn/react'
-import { useBoundProp } from '@json-render/react'
+import { defineBlock, useBoundProp } from 'gencn/react'
 import { Field, FieldLabel } from '@/components/ui/field'
 import { Slider as Range } from '@/components/ui/slider'
 
