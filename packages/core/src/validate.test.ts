@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest'
+import { z } from 'zod'
 import {
   Card,
   Image,
@@ -7,6 +8,7 @@ import {
   checkRefresh,
   checkSpec,
   createCatalog,
+  defineBlockDef,
   extract,
   toolPrompt,
   type Spec,
@@ -162,4 +164,19 @@ test('toolPrompt lists each block, callTool and refresh, not json-render streami
   expect(text).toContain('Events: turnOn, turnOff, change.')
   expect(text).toContain('Optional `refresh`')
   expect(text).not.toContain('JSONL')
+})
+
+test('toolPrompt marks a prop with a default as optional, typed as its inner type', () => {
+  const Badge = defineBlockDef({
+    name: 'Badge',
+    description: 'A label.',
+    props: z.object({
+      text: z.string(),
+      tone: z.enum(['muted', 'loud']).default('muted'),
+      size: z.number().prefault(1),
+    }),
+  })
+  expect(toolPrompt(createCatalog([Badge]))).toContain(
+    '- Badge: { text: string, tone?: "muted" | "loud", size?: number } -',
+  )
 })

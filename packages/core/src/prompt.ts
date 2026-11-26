@@ -4,6 +4,9 @@ import { CALL_TOOL, type Catalog } from './catalog.js'
 
 type Action = { description?: string; params?: z.ZodType }
 
+/** Wrappers a model may leave out: `.optional()`, `.default()`, `.prefault()`. */
+const omittable = new Set(['optional', 'default', 'prefault'])
+
 /** A zod type as a short TypeScript-like type, for the model to read. */
 function typeOf(schema: z.ZodType): string {
   const def = schema._zod.def as unknown as Record<string, unknown> & {
@@ -13,12 +16,14 @@ function typeOf(schema: z.ZodType): string {
     case 'object': {
       const shape = def.shape as Record<string, z.ZodType>
       const fields = Object.entries(shape).map(([key, value]) => {
-        const optional = value._zod.def.type === 'optional'
+        const optional = omittable.has(value._zod.def.type)
         return `${key}${optional ? '?' : ''}: ${typeOf(value)}`
       })
       return fields.length ? `{ ${fields.join(', ')} }` : '{}'
     }
     case 'optional':
+    case 'default':
+    case 'prefault':
     case 'nullable':
       return typeOf(def.innerType as z.ZodType)
     case 'array':
