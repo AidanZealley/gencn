@@ -11,7 +11,7 @@ export type Extraction = {
   as?: 'number' | 'text'
   /**
    * `[read, shown]`: a number read in other units than the view uses,
-   * such as `[255, 100]` for a 0–255 brightness shown as a percentage. The
+   * such as `[1023, 100]` for a 0–1023 reading shown as a percentage. The
    * value becomes value × shown ÷ read, rounded to a whole number.
    * Implies `as: 'number'`.
    */

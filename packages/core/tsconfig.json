@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2023",
-    "lib": [
-      "ES2023",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "module": "nodenext",
     "strict": true,
     "skipLibCheck": true,
@@ -13,12 +9,8 @@
     "declaration": true,
     "outDir": "dist",
     "rootDir": "src",
-    "types": [
-      "node"
-    ],
+    "types": ["node"],
     "jsx": "react-jsx"
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }
