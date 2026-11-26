@@ -5,7 +5,9 @@ import { copyFileSync, mkdirSync, readFileSync } from 'node:fs'
 
 const out = '../apps/playground/public/r'
 const looks = ['vega', 'nova', 'maia', 'lyra', 'mira', 'luma', 'sera', 'rhea']
-const libraries = ['base', 'radix', 'aria']
+// React Aria isn't published until its blocks are checked against shadcn's
+// React Aria components.
+const libraries = ['base', 'radix']
 const styles = [
   ...libraries.flatMap((library) =>
     looks.map((look) => ({ style: `${library}-${look}`, library })),

@@ -33,8 +33,9 @@ pnpm test
    (`createCatalog([...])`, React-free, where views are generated) and
    `blocks.ts` (`createBlocks(catalog, [...])`, where they're drawn).
 
-Slider and Select are Base UI only for now, so they're only published under
-`base-*` styles.
+Blocks are published for Base UI (`base-*` styles) and Radix (`radix-*`,
+`new-york`, `default`); Slider and Select for Base UI only. React Aria styles
+aren't published yet.
 
 To try an unpublished change in an app, depend on it with `file:`
 (`"gencn": "file:../gencn/packages/core"`), not `link:`, which would give
