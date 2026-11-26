@@ -55,6 +55,16 @@ const press = (actor: ReturnType<typeof createViewActor>, on: boolean) => {
   return actor.handlers.callTool({ tool: 'Set', args: { on } })
 }
 
+test('a one-block view with a bound prop starts idle', () => {
+  const actor = createViewActor(lamp(), {
+    ...host(),
+    catalog: createCatalog([Switch]),
+  })
+  const stop = actor.start()
+  expect(actor.phase()).toEqual({ kind: 'idle' })
+  stop()
+})
+
 test('a view reverts every call that did not work, and only reads set what is confirmed', async () => {
   const h = host()
   const actor = createViewActor(lamp(), { ...h, catalog })

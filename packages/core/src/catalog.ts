@@ -12,7 +12,10 @@ export { CALL_TOOL } from './json-render.js'
 export type Catalog<Defs extends readonly BlockDef[] = readonly BlockDef[]> = {
   blocks: Defs
   names: Defs[number]['name'][]
-  /** json-render's catalog over the same blocks, with `callTool`. */
+  /**
+   * json-render's catalog over the same blocks, with `callTool`. Its props
+   * are open: gencn checks them against `blocks` (see `validateBlocks`).
+   */
   jsonRender: JsonRenderCatalog
 }
 

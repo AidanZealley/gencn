@@ -76,6 +76,37 @@ test('a well-formed view passes every check', () => {
   expect(checkSpec(catalog, view())).toBeUndefined()
 })
 
+const switchCatalog = createCatalog([Switch])
+
+const switchView = (checked: unknown, type = 'Switch'): Spec => ({
+  root: 'kitchen',
+  state: { kitchen: true },
+  elements: {
+    kitchen: { type, props: { label: 'Kitchen', checked }, children: [] },
+  },
+})
+
+test.each(['$bindState', '$state'])(
+  'a one-block catalog accepts a %s prop',
+  (expression) => {
+    expect(
+      checkSpec(switchCatalog, switchView({ [expression]: '/kitchen' })),
+    ).toBeUndefined()
+  },
+)
+
+test('a one-block catalog rejects an invalid literal prop', () => {
+  expect(checkSpec(switchCatalog, switchView('yes'))).toContain(
+    'expected boolean',
+  )
+})
+
+test('a one-block catalog rejects an unknown block', () => {
+  expect(checkSpec(switchCatalog, switchView(true, 'Card'))).toContain(
+    'elements.kitchen.type',
+  )
+})
+
 test('catches what json-render lets through, and gencn rules', () => {
   const spec = view()
   spec.elements.kitchen!.props = {
