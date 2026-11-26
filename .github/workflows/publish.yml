@@ -24,7 +24,7 @@ jobs:
           node-version: '24.19.0'
       - uses: pnpm/action-setup@v6
       - run: pnpm install --frozen-lockfile
-      - run: pnpm build && pnpm typecheck && pnpm test
+      - run: pnpm build && pnpm typecheck && pnpm test && pnpm exec prettier --check .
       - name: Check the tag matches the version
         working-directory: packages/core
         run: |

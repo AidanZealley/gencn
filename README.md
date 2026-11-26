@@ -24,15 +24,11 @@ pnpm test
 
 ## Using it in an app
 
-1. Depend on `gencn` with `file:` (not `link:`, which resolves zod and
-   json-render from gencn's own `node_modules`, giving the app two copies):
-   `"gencn": "file:../gencn/packages/core"`. Run `pnpm install` again
-   after adding files to core.
-2. Map the namespace in `components.json`:
-   `"registries": { "@gencn": "http://localhost:5173/r/{style}/{name}.json" }`
-   and install blocks, dry run first:
-   `npx shadcn add @gencn/switch-block --dry-run`. A local file also works:
-   `npx shadcn add ../gencn/apps/playground/public/r/base-lyra/switch-block.json`.
+1. Install the package and its peers:
+   `pnpm add gencn @json-render/core @json-render/react zod`.
+2. Map the registry in `components.json`:
+   `"registries": { "@gencn": "https://aidanzealley.github.io/gencn/r/{style}/{name}.json" }`,
+   then add blocks, dry run first: `npx shadcn add @gencn/switch-block --dry-run`.
 3. Keep two lists, as `apps/playground/src/views` does: `catalog.ts`
    (`createCatalog([...])`, React-free, where views are generated) and
    `blocks.ts` (`createBlocks(catalog, [...])`, where they're drawn).
@@ -40,6 +36,10 @@ pnpm test
 Slider and Select are Base UI only for now, so they're only published under
 `base-*` styles.
 
-Licensed under Apache-2.0 (`LICENSE`). The block definitions' props in
-`packages/core` are adapted from `@json-render/shadcn` (Apache-2.0); see
-`NOTICE`. The registry blocks are gencn's own.
+To try an unpublished change in an app, depend on it with `file:`
+(`"gencn": "file:../gencn/packages/core"`), not `link:`, which would give
+the app a second zod and json-render. Run `pnpm install` again after adding
+files to core, and clear Vite's dependency cache (`node_modules/.vite`)
+after each build, since a `file:` change doesn't invalidate it.
+
+Licensed under Apache-2.0 (`LICENSE`).

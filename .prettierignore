@@ -2,3 +2,7 @@ pnpm-lock.yaml
 apps/playground/public/r/
 apps/playground/dist/
 packages/core/dist/
+# Written by the shadcn CLI, so it can update them.
+apps/playground/src/components/ui/
+apps/playground/src/lib/utils.ts
+apps/playground/src/index.css

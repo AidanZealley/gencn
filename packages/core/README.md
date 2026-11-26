@@ -11,8 +11,20 @@ controls call your functions, never the model.
 - `gencn/react`: `defineBlock`, `createBlocks`, `useGencnView` and
   a plain `<GencnView>`.
 
-Install blocks with the shadcn CLI (`npx shadcn add @gencn/switch-block`),
-then keep two lists: `catalog.ts` (`createCatalog([...])`, where views are
+```sh
+pnpm add gencn @json-render/core @json-render/react zod
+```
+
+Map the registry in `components.json`, then install blocks with the shadcn
+CLI (`npx shadcn add @gencn/switch-block`):
+
+```json
+"registries": {
+  "@gencn": "https://aidanzealley.github.io/gencn/r/{style}/{name}.json"
+}
+```
+
+Then keep two lists: `catalog.ts` (`createCatalog([...])`, where views are
 generated) and `blocks.ts` (`createBlocks(catalog, [...])`, where they're
 drawn). A block missing from either doesn't compile.
 
