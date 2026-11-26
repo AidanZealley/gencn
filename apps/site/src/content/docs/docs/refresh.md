@@ -23,7 +23,7 @@ Without a refresh, a view shows its state from when it was generated. With one, 
 
 - `tool` and `args`: the call to make.
 - `from`: an optional JSON pointer into the output, when the output is JSON.
-- `extract`: for each state path, an RE2 regex whose first group is the value. Add `map` to translate the text, or `as: "number"` to read a number.
+- `extract`: for each state path, an RE2 regex whose first group is the value. Add `map` to translate the text, `as: "number"` to read a number, or `scale: [read, shown]` to convert units, such as `[255, 100]` for a 0–255 brightness shown as a percentage.
 
 A missed match never produces a guess. The view shows `unavailable` with the reason `read-failed`.
 
