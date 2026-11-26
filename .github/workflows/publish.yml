@@ -1,0 +1,51 @@
+name: Publish
+
+# A `v*` tag publishes `gencn` at that version to npm. The tag must match
+# packages/core/package.json's version. npm trusts this workflow by its
+# filename (publish.yml): renaming it means setting up trust again on
+# npmjs.com.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+  # npm trusted publishing exchanges the workflow's OIDC token for a
+  # short-lived publish token, so the repo stores no npm secret.
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24.19.0'
+      - uses: pnpm/action-setup@v6
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build && pnpm typecheck && pnpm test
+      - name: Check the tag matches the version
+        working-directory: packages/core
+        run: |
+          version=$(jq -r .version package.json)
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "Tag $GITHUB_REF_NAME doesn't match gencn $version"
+            exit 1
+          fi
+      # pnpm pack runs prepack (LICENSE and NOTICE); npm publishes, because
+      # it handles trusted publishing and provenance. A prerelease goes to
+      # `next`, so `latest` only ever installs a stable version. A rerun
+      # skips a version that's already published.
+      - name: Publish to npm
+        working-directory: packages/core
+        run: |
+          version=$(jq -r .version package.json)
+          if npm view "gencn@$version" version > /dev/null 2>&1; then
+            echo "gencn@$version is already published"
+            exit 0
+          fi
+          tag=latest
+          case "$version" in *-*) tag=next ;; esac
+          pnpm pack --pack-destination ../../dist-npm
+          npm publish ../../dist-npm/gencn-*.tgz --access public --tag "$tag"
