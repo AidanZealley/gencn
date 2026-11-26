@@ -18,7 +18,6 @@ export {
   type ViewHost,
 } from './actor.js'
 export { toolCalls, viewTools, type ToolCall } from './calls.js'
-export { prepareCalls } from './prepare.js'
 export {
   extract,
   extractedState,

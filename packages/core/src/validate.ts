@@ -1,9 +1,10 @@
 import { z } from 'zod'
 import { autoFixSpec, getByPath, validateSpec } from '@json-render/core'
 import type { BlockDef } from './block.js'
-import { CALL_TOOL, type Catalog } from './catalog.js'
-import { bindable, bindingsIn, toolCalls } from './calls.js'
+import type { Catalog } from './catalog.js'
+import { toolCalls } from './calls.js'
 import { extract, patternProblem } from './extract.js'
+import { rejected, type Rejected } from './json-render.js'
 import { refreshSchema, type Spec } from './spec.js'
 
 /** A problem json-render's own validation can't see. */
@@ -13,8 +14,7 @@ export type BlockIssue = {
     | 'invalid_props'
     | 'unknown_event'
     | 'unknown_action'
-    | 'call_tool_placement'
-    | 'built_in_confirm'
+    | Rejected['code']
     | 'call_tool_name'
     | 'switch_binding'
   elementKey: string
@@ -44,11 +44,9 @@ function parseProps(block: BlockDef, props: Record<string, unknown>) {
 /**
  * Checks what json-render's own validation doesn't: each element's props
  * against its block (strict: no `className`), its events, the actions they
- * name, and gencn's rules: `callTool` runs only from an element's events,
- * which are always a person's, and what those bindings chain
- * (`onSuccess`, `onError`), never `watch` or anything else that fires by
- * itself; `confirm` only on `callTool` (a view asks through its host), names a tool or a `$cond` between
- * names, and a Switch binds turnOn/turnOff or change, not both.
+ * name, and gencn's rules: what it refuses of json-render (see
+ * `json-render.ts`), `callTool` names a tool or a `$cond` between names,
+ * and a Switch binds turnOn/turnOff or change, not both.
  */
 export function validateBlocks(catalog: Catalog, spec: Spec): BlockIssue[] {
   const blocks = new Map(catalog.blocks.map((block) => [block.name, block]))
@@ -92,28 +90,8 @@ export function validateBlocks(catalog: Catalog, spec: Spec): BlockIssue[] {
     }
   }
 
-  // Anything that runs by itself, such as watch, is outside every "on".
-  const calls = (value: unknown) =>
-    bindingsIn(value).filter(({ action }) => action === CALL_TOOL).length
-  const inEvents = Object.values(spec.elements).reduce(
-    (n, { on }) => n + calls(on),
-    0,
-  )
-  if (calls(bindable(spec)) > inEvents) {
-    report(
-      'call_tool_placement',
-      spec.root,
-      `${CALL_TOOL} may only be bound in an element's "on" (or what that binding chains, onSuccess and onError), never in watch or anything else that runs by itself.`,
-    )
-  }
-  for (const binding of bindingsIn(bindable(spec))) {
-    if (builtIns.includes(binding.action) && 'confirm' in binding) {
-      report(
-        'built_in_confirm',
-        spec.root,
-        `confirm works only on ${CALL_TOOL}; remove it from ${binding.action}.`,
-      )
-    }
+  for (const { code, elementKey, message } of rejected(spec)) {
+    report(code, elementKey, message)
   }
   for (const call of toolCalls(spec)) {
     if (!call.tools) {

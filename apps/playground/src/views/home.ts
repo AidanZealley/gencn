@@ -1,10 +1,11 @@
-import type { ActionOutcome, OnAction, OnRead } from 'gencn'
+import type { ActionOutcome, Args, OnAction, OnRead } from 'gencn'
 
 // A pretend Home Assistant, shaped like its real Assist tools: actions
 // name a device, answer with success and failed lists and no new state;
 // GetLiveContext returns a JSON envelope around a prose line and a YAML
 // list of every device. The porch light never answers; changing the
-// heating asks first. Calls take a moment, like a real house.
+// heating asks the person first, in the app's own UI, as a host would.
+// Calls take a moment, like a real house.
 
 type Device = {
   name: string
@@ -33,7 +34,18 @@ const changed = () => {
   listeners.forEach((listener) => listener())
 }
 
-/** For `useSyncExternalStore`: the house as a list, which changes as it does. */
+/** A call waiting for the person's approval; `answer` it. */
+export type Approval = {
+  tool: string
+  args: Args
+  answer: (allowed: boolean) => void
+}
+let approval: Approval | undefined
+
+/**
+ * For `useSyncExternalStore`: the house as a list, and the call waiting
+ * for approval, which change as they do.
+ */
 export const house = {
   subscribe: (listener: () => void) => {
     listeners.add(listener)
@@ -41,7 +53,24 @@ export const house = {
   },
   version: () => version,
   devices: () => devices,
+  approval: () => approval,
 }
+
+/** Asks the person to allow a call. The view going away answers no. */
+const approve = (tool: string, args: Args, signal: AbortSignal) =>
+  new Promise<boolean>((resolve) => {
+    if (signal.aborted) return resolve(false)
+    const answer = (allowed: boolean) => {
+      signal.removeEventListener('abort', stopped)
+      approval = undefined
+      changed()
+      resolve(allowed)
+    }
+    const stopped = () => answer(false)
+    signal.addEventListener('abort', stopped)
+    approval = { tool, args, answer }
+    changed()
+  })
 
 /** Changes a device from "elsewhere", as the HA app or an automation would. */
 export function changeElsewhere() {
@@ -89,9 +118,10 @@ export const onRead: OnRead = async (tool, _args, { signal }) => {
 /** Runs a call the way HA would, once; the log lists each. */
 export const calls: string[] = []
 
-export const onAction: OnAction = async (tool, args, { approved }) => {
-  if (tool === 'HassClimateSetMode' && !approved) {
-    return { outcome: 'ask' }
+export const onAction: OnAction = async (tool, args, { signal }) => {
+  // The app's own rule: the heating changes only once the person allows it.
+  if (tool === 'HassClimateSetMode' && !(await approve(tool, args, signal))) {
+    return { outcome: 'declined' }
   }
   // Started: never cancelled, even if the view goes away.
   await new Promise((resolve) => setTimeout(resolve, 400))

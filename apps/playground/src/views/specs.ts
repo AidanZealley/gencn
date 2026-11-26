@@ -128,8 +128,8 @@ const livingRoom: Spec = {
       },
       children: [],
     },
-    // json-render's own lifecycle: confirm first, then onSuccess sets the
-    // switch, since a button has no bound state of its own.
+    // json-render's own lifecycle: onSuccess sets the switch, since a
+    // button has no bound state of its own.
     off: {
       type: 'Button',
       props: { label: 'Lamp off for the night', variant: 'outline' },
@@ -139,11 +139,6 @@ const livingRoom: Spec = {
           params: {
             tool: 'HassTurnOff',
             args: { name: 'Desk Lamp', domain: ['light'] },
-          },
-          confirm: {
-            title: 'Turn the desk lamp off?',
-            message: 'It is at ${/desk/brightness}%.',
-            confirmLabel: 'Turn off',
           },
           onSuccess: { set: { '/desk/on': false } },
         },

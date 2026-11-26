@@ -88,13 +88,17 @@ test('catches what json-render lets through, and gencn rules', () => {
     params: { tool: 'Set' },
   }
   spec.elements.row!.on = { press: { action: 'reboot' } }
-  // json-render's own lifecycle stays usable: a chained callTool is fine.
+  // json-render's own lifecycle stays usable: a chained callTool is fine,
+  // but confirm isn't, there or anywhere: the app asks, not the view.
   spec.elements.card!.on = {
     press: {
       action: 'setState',
       params: { statePath: '/x', value: 1 },
-      confirm: { title: 'Sure?', message: 'Built-ins draw their own dialog' },
-      onSuccess: { action: 'callTool', params: { tool: 'HassTurnOn' } },
+      onSuccess: {
+        action: 'callTool',
+        params: { tool: 'HassTurnOn' },
+        confirm: { title: 'Sure?', message: 'The app asks instead' },
+      },
     },
   } as never
   // But not one that runs by itself.
@@ -109,7 +113,7 @@ test('catches what json-render lets through, and gencn rules', () => {
     'no "press" event',
     'unknown "reboot"',
     'never in watch', // callTool placement
-    'confirm works only on callTool',
+    '"card": remove "confirm"',
   ]) {
     expect(problems).toContain(expected)
   }
@@ -164,6 +168,7 @@ test('toolPrompt lists each block, callTool and refresh, not json-render streami
   expect(text).toContain('Events: turnOn, turnOff, change.')
   expect(text).toContain('Optional `refresh`')
   expect(text).not.toContain('JSONL')
+  expect(text).not.toContain('confirm')
 })
 
 test('toolPrompt marks a prop with a default as optional, typed as its inner type', () => {

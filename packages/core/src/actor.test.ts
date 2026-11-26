@@ -41,14 +41,8 @@ function host() {
   return {
     calls,
     settle: (outcome: ActionOutcome) => pending.shift()!(outcome),
-    onAction: (
-      tool: string,
-      args: Record<string, unknown>,
-      { approved }: { approved?: boolean },
-    ) => {
-      calls.push(
-        `${tool} ${JSON.stringify(args)}${approved ? ' approved' : ''}`,
-      )
+    onAction: (tool: string, args: Record<string, unknown>) => {
+      calls.push(`${tool} ${JSON.stringify(args)}`)
       return new Promise<ActionOutcome>((resolve) => pending.push(resolve))
     },
     onRead: async () => 'lamp: on',
@@ -89,15 +83,15 @@ test('a view reverts every call that did not work, and only reads set what is co
     notice: { code: 'failed', message: 'no answer' },
   })
 
-  // So does a declined one.
+  // So does one the host's approval declined, which it notes.
   const asked = press(actor, true)
-  h.settle({ outcome: 'ask' })
-  await expect.poll(() => actor.phase().kind).toBe('asking')
-  const asking = actor.phase()
-  if (asking.kind !== 'asking') throw new Error(`asking, not ${asking.kind}`)
-  asking.answer(false)
+  h.settle({ outcome: 'declined' })
   await expect(asked).rejects.toMatchObject({ code: 'declined' })
   expect(actor.store.get('/on')).toBe(false)
+  expect(actor.phase()).toEqual({
+    kind: 'idle',
+    notice: { code: 'declined', tool: 'Set' },
+  })
 
   // Stopping mid-call stops waiting; the call itself carries on.
   const late = press(actor, true)

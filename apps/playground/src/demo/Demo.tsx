@@ -127,8 +127,8 @@ const useDark = () =>
 const onAction = async () => ({ outcome: 'done' as const })
 
 function View({ spec }: { spec: Spec }) {
-  const { content } = useGencnView(spec, { blocks, onAction })
-  return <div className="w-full max-w-sm">{content}</div>
+  const { view } = useGencnView(spec, { blocks, onAction })
+  return <div className="w-full max-w-sm">{view}</div>
 }
 
 export function Demo() {

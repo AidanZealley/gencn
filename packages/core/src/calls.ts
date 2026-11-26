@@ -1,5 +1,5 @@
 import type { Spec } from './spec.js'
-import { CALL_TOOL } from './catalog.js'
+import { CALL_TOOL } from './json-render.js'
 
 /** One `callTool` binding in a spec, as written. */
 export type ToolCall = {
@@ -36,19 +36,6 @@ export function bindingsIn(value: unknown): Binding[] {
   }
   return Object.values(value).flatMap(bindingsIn)
 }
-
-/** Everywhere in `spec` an action can be bound: not state, props or refresh. */
-export const bindable = (spec: Spec) => ({
-  ...spec,
-  state: undefined,
-  refresh: undefined,
-  elements: Object.fromEntries(
-    Object.entries(spec.elements).map(([key, element]) => [
-      key,
-      { ...element, props: undefined },
-    ]),
-  ),
-})
 
 /** A tool written as a name, or a `$cond` between names: each name. */
 function namesOf(tool: unknown): string[] | undefined {

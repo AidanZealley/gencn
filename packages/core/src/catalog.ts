@@ -1,18 +1,8 @@
-import {
-  defineCatalog,
-  type Catalog as JsonRenderCatalog,
-} from '@json-render/core'
-import { schema } from '@json-render/react/schema'
-import { z } from 'zod'
+import type { Catalog as JsonRenderCatalog } from '@json-render/core'
 import type { BlockDef } from './block.js'
+import { jsonRenderCatalog } from './json-render.js'
 
-/** The one action a view's controls run: a call to one of the host's tools. */
-export const CALL_TOOL = 'callTool'
-
-const callToolParams = z.object({
-  tool: z.string(),
-  args: z.record(z.string(), z.unknown()).optional(),
-})
+export { CALL_TOOL } from './json-render.js'
 
 /**
  * The blocks an app generates views from, listed one by one: never spread
@@ -35,25 +25,5 @@ export function createCatalog<const Defs extends readonly BlockDef[]>(
   if (twice) {
     throw new Error(`The catalog lists ${twice} twice.`)
   }
-  // json-render's entry shape, without the name; its types want mutable
-  // arrays, and gencn types the blocks itself, so the config is untyped.
-  const components = Object.fromEntries(
-    blocks.map(({ name, slots, events, ...entry }) => [
-      name,
-      { ...entry, slots: slots && [...slots], events: events && [...events] },
-    ]),
-  )
-  const jsonRender = defineCatalog(schema, {
-    components: components as never,
-    actions: {
-      [CALL_TOOL]: {
-        description:
-          "Calls one of the host's tools, by name, when the person uses " +
-          'the control. No model runs. tool may be a $cond choosing ' +
-          'between names. args must match the tool; a value may read state.',
-        params: callToolParams,
-      },
-    },
-  }) as unknown as JsonRenderCatalog
-  return { blocks, names, jsonRender }
+  return { blocks, names, jsonRender: jsonRenderCatalog(blocks) }
 }
