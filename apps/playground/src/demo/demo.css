@@ -1,0 +1,28 @@
+@import '../index.css';
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/figtree';
+@import '@fontsource-variable/geist-mono';
+@import './themes.css';
+
+/* Each theme sets --app-font; headings follow it like the body. */
+@theme inline {
+  --font-sans: var(--app-font);
+  --font-heading: var(--app-font);
+}
+
+/* Theme switches fade rather than flash. */
+html.theme-changing *,
+html.theme-changing *::before,
+html.theme-changing *::after {
+  transition:
+    background-color 500ms,
+    border-color 500ms,
+    color 500ms,
+    border-radius 500ms !important;
+}
+
+/* Transparent, so the demo sits on the page that embeds it. */
+html,
+body {
+  background: transparent;
+}

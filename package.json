@@ -7,8 +7,9 @@
     "node": ">=24.19"
   },
   "scripts": {
-    "build": "pnpm -r build",
+    "build": "pnpm --filter gencn build && pnpm --filter @gencn/site build",
     "dev": "pnpm --filter @gencn/playground dev",
+    "dev:site": "pnpm --filter gencn build && pnpm --filter @gencn/site dev",
     "typecheck": "pnpm -r typecheck",
     "test": "vitest run",
     "format": "prettier --write ."
