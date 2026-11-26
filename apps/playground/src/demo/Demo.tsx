@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useRef, useSyncExternalStore } from 'react'
-import { ArrowUp } from 'lucide-react'
+import { ArrowUp, Palette } from 'lucide-react'
 import type { Spec } from 'gencn'
 import { useGencnView } from 'gencn/react'
 import { Button } from '@/components/ui/button'
@@ -171,30 +171,8 @@ export function Demo() {
     return () => observer.disconnect()
   }, [])
 
-  const label = themes.find(({ name }) => name === state.theme)!.label
   return (
     <div inert className="flex h-svh flex-col text-foreground select-none">
-      <div className="flex shrink-0 items-center justify-end gap-3 px-4 pt-2">
-        <span className="text-xs text-muted-foreground">{label}</span>
-        <div className="flex gap-1.5">
-          {themes.map(({ name }) => (
-            <span
-              key={name}
-              className={cn(
-                'grid size-5 place-items-center rounded-full',
-                name === state.theme && 'ring-1 ring-foreground/40',
-              )}
-            >
-              {/* Each swatch wears its own theme, so shows its primary. */}
-              <span
-                data-theme={name}
-                className="size-3.5 rounded-full bg-primary"
-              />
-            </span>
-          ))}
-        </div>
-      </div>
-
       <div
         ref={list}
         className="min-h-0 flex-1 overflow-hidden mask-t-from-75% mask-t-to-100%"
@@ -206,23 +184,34 @@ export function Demo() {
             state.clearing && 'opacity-0',
           )}
         >
-          {exchanges.slice(0, state.asked).map((exchange, index) => (
-            <div key={index} className="flex flex-col gap-3">
-              <p className="max-w-[80%] animate-in self-end rounded-lg bg-primary px-3 py-2 text-sm text-primary-foreground duration-300 fade-in slide-in-from-bottom-2">
-                {exchange.ask}
-              </p>
-              {index < state.replied ? (
-                <div className="flex animate-in flex-col gap-3 duration-500 fade-in slide-in-from-bottom-2">
-                  <p className="text-sm">{exchange.reply}</p>
-                  <View spec={exchange.view} />
-                </div>
-              ) : (
-                <p className="animate-pulse text-sm text-muted-foreground">
-                  Making a view…
-                </p>
-              )}
-            </div>
-          ))}
+          {/* Each exchange asked so far, and the next one's theme change
+              as soon as it happens, before its question is typed. */}
+          {exchanges.slice(0, state.asked + 1).map((exchange, index) => {
+            const asked = index < state.asked
+            const changed =
+              exchange.theme && (asked || state.theme === exchange.theme)
+            return (
+              <div key={index} className="flex flex-col gap-3">
+                {changed && <ThemeChange theme={exchange.theme!} />}
+                {asked && (
+                  <p className="max-w-[80%] animate-in self-end rounded-lg bg-primary px-3 py-2 text-sm text-primary-foreground duration-300 fade-in slide-in-from-bottom-2">
+                    {exchange.ask}
+                  </p>
+                )}
+                {asked &&
+                  (index < state.replied ? (
+                    <div className="flex animate-in flex-col gap-3 duration-500 fade-in slide-in-from-bottom-2">
+                      <p className="text-sm">{exchange.reply}</p>
+                      <View spec={exchange.view} />
+                    </div>
+                  ) : (
+                    <p className="animate-pulse text-sm text-muted-foreground">
+                      Making a view…
+                    </p>
+                  ))}
+              </div>
+            )
+          })}
         </div>
       </div>
 
@@ -238,6 +227,28 @@ export function Demo() {
           </Button>
         </div>
       </div>
+    </div>
+  )
+}
+
+const label = (theme: ThemeName) =>
+  themes.find(({ name }) => name === theme)!.label
+
+/**
+ * The theme change as an event in the transcript, so it reads as something
+ * that happened in the app. The swatch wears the new theme.
+ */
+function ThemeChange({ theme }: { theme: ThemeName }) {
+  return (
+    <div className="flex animate-in items-center gap-3 text-xs text-muted-foreground duration-500 fade-in">
+      <span className="h-px flex-1 bg-border" />
+      <span className="flex items-center gap-2 rounded-full border bg-background px-3 py-1.5 text-foreground">
+        <Palette className="size-3.5 text-muted-foreground" />
+        Theme changed to
+        <span data-theme={theme} className="size-3 rounded-full bg-primary" />
+        <span className="font-medium">{label(theme)}</span>
+      </span>
+      <span className="h-px flex-1 bg-border" />
     </div>
   )
 }
