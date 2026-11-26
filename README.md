@@ -9,16 +9,23 @@ block's look comes from a shadcn registry item installed into your app.
   `checkRefresh`, `extract` and `createViewActor`. `gencn/react` draws
   views: `defineBlock`, `createBlocks`, `useGencnView`, `<GencnView>`.
 - `registry`: one shadcn registry item per block (`registry.json`,
-  `blocks/*.tsx`). `pnpm build` writes it to `apps/playground/public/r/`,
-  flat and under every shadcn style folder.
+  `blocks/*.tsx`). Its build writes to `apps/site/public/r/`, flat and
+  under every shadcn style folder.
 - `apps/playground`: Vite app that renders hand-written specs against a
-  pretend Home Assistant, with the hook and with `<GencnView>`, and serves
-  the registry at `/r/`.
+  pretend Home Assistant, with the hook and with `<GencnView>`. Its
+  `demo.html` is the landing page's demo, a scripted chat played through
+  real shadcn themes (`scripts/themes.ts` fetches them into
+  `src/demo/themes.css`).
+- `apps/site`: Astro + Starlight. The landing page and docs, deployed to
+  GitHub Pages at https://aidanzealley.github.io/gencn by
+  `.github/workflows/site.yml`, with the registry at `/r/` and the
+  playground at `/playground/`.
 
 ```sh
 pnpm install
-pnpm build   # core, then registry, then playground
-pnpm dev     # playground and registry on port 5173
+pnpm build      # core, then registry and playground into the site, then the site
+pnpm dev        # playground on port 5173 (the demo at /demo.html)
+pnpm dev:site   # the site, with the registry and playground built into it
 pnpm test
 ```
 

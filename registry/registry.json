@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "gencn",
-  "homepage": "http://localhost:5173",
+  "homepage": "https://aidanzealley.github.io/gencn",
   "items": [
     {
       "name": "card-block",

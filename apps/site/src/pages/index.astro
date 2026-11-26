@@ -1,0 +1,198 @@
+---
+import '@fontsource-variable/geist'
+import Lockup from '../landing/gencn-lockup.svg'
+import Mark from '../landing/gencn-mark.svg'
+
+const tagline = "Generative UI that's built from your own shadcn components."
+const repository = 'https://github.com/AidanZealley/gencn'
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>gencn</title>
+    <meta name="description" content={tagline} />
+    <link rel="icon" href="/gencn/favicon.svg" type="image/svg+xml" />
+    <script is:inline>
+      // Follow a light or dark choice made on the docs, and tell the demo.
+      let scheme = matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light'
+      try {
+        const theme = localStorage.getItem('starlight-theme')
+        if (theme === 'light' || theme === 'dark') scheme = theme
+      } catch {}
+      document.documentElement.dataset.theme = scheme
+    </script>
+  </head>
+  <body>
+    <header class="wrap top">
+      <a href="/gencn/" aria-label="gencn"><Lockup class="lockup" /></a>
+      <a class="quiet" href={repository}>
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"
+          ><path
+            fill="currentColor"
+            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
+          ></path></svg
+        >
+        GitHub
+      </a>
+    </header>
+    <main class="wrap hero">
+      <div class="pitch">
+        <Mark class="mark" aria-hidden="true" />
+        <h1>{tagline}</h1>
+        <a class="cta" href="/gencn/docs/getting-started/">Read the docs →</a>
+      </div>
+      <!-- Decorative: a scripted chat whose replies are gencn views. It
+           ignores the pointer, so the page scrolls straight past it. -->
+      <iframe
+        class="demo"
+        title="An assistant replying with gencn views as the app's theme changes"
+        tabindex="-1"
+        aria-hidden="true"></iframe>
+      <script is:inline>
+        document.querySelector('.demo').src =
+          `/gencn/playground/demo.html?scheme=${document.documentElement.dataset.theme}`
+      </script>
+    </main>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    color-scheme: light;
+    --bg: oklch(1 0 0);
+    --fg: oklch(0.145 0 0);
+    --muted: oklch(0.556 0 0);
+  }
+
+  :root[data-theme='dark'] {
+    color-scheme: dark;
+    --bg: oklch(0.145 0 0);
+    --fg: oklch(0.985 0 0);
+    --muted: oklch(0.708 0 0);
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Geist Variable', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--fg);
+    outline-offset: 3px;
+  }
+
+  .wrap {
+    max-width: 75rem;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+</style>
+
+<style>
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 3.5rem;
+  }
+
+  .lockup {
+    display: block;
+    height: 1.5rem;
+    width: auto;
+  }
+
+  .quiet {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+
+  .quiet:hover {
+    color: var(--fg);
+  }
+
+  .hero {
+    display: grid;
+    gap: 2rem;
+    padding-block: 3rem 2rem;
+  }
+
+  .mark {
+    display: block;
+    width: 3.5rem;
+    height: 3.5rem;
+    margin-bottom: 2rem;
+  }
+
+  h1 {
+    margin: 0;
+    max-width: 32rem;
+    font-size: clamp(2rem, 4.4vw, 3.25rem);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    height: 2.5rem;
+    margin-top: 2rem;
+    padding-inline: 1rem;
+    background: var(--fg);
+    color: var(--bg);
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 0.375rem;
+  }
+
+  .cta:hover {
+    opacity: 0.88;
+  }
+
+  .demo {
+    display: block;
+    width: 100%;
+    height: 35rem;
+    border: 0;
+    background: transparent;
+    pointer-events: none;
+  }
+
+  @media (min-width: 60rem) {
+    .hero {
+      grid-template-columns: 1fr 35rem;
+      align-items: center;
+      min-height: calc(100svh - 3.5rem);
+      padding-block: 0;
+    }
+
+    .demo {
+      height: min(45rem, calc(100svh - 6rem));
+      min-height: 35rem;
+    }
+  }
+</style>

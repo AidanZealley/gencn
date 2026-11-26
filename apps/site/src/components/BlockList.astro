@@ -1,0 +1,129 @@
+---
+// Every block gencn defines, read from the package itself, so this list
+// can't drift from it.
+import * as gencn from 'gencn'
+import type { BlockDef } from 'gencn'
+import { z } from 'zod'
+
+const defs = (Object.values(gencn) as unknown[]).filter(
+  (value): value is BlockDef =>
+    typeof value === 'object' &&
+    value !== null &&
+    'props' in value &&
+    'description' in value,
+)
+
+type Schema = {
+  type?: string
+  enum?: unknown[]
+  const?: unknown
+  anyOf?: Schema[]
+  items?: Schema
+  properties?: Record<string, Schema>
+}
+
+/** A prop's JSON Schema as a short TypeScript-like type. */
+const typeOf = (schema: Schema): string =>
+  schema.enum
+    ? schema.enum.map((value) => JSON.stringify(value)).join(' | ')
+    : schema.const !== undefined
+      ? JSON.stringify(schema.const)
+      : schema.anyOf
+        ? schema.anyOf.map(typeOf).join(' | ')
+        : schema.type === 'array' && schema.items
+          ? `${typeOf(schema.items)}[]`
+          : schema.type === 'object' && schema.properties
+            ? `{ ${Object.entries(schema.properties)
+                .map(([key, value]) => `${key}: ${typeOf(value)}`)
+                .join(', ')} }`
+            : (schema.type ?? 'unknown')
+
+const kebab = (name: string) => name.toLowerCase()
+
+// Grouped as the model meets them: blocks that hold others, controls a
+// person uses (they fire events), and the content between.
+const groups = [
+  { title: 'Layout', has: (def: BlockDef) => !!def.slots?.length },
+  { title: 'Controls', has: (def: BlockDef) => !!def.events?.length },
+  {
+    title: 'Content',
+    has: (def: BlockDef) => !def.slots?.length && !def.events?.length,
+  },
+]
+
+const describe = (def: BlockDef) => {
+  const schema = z.toJSONSchema(def.props) as Schema & { required?: string[] }
+  return {
+    name: def.name,
+    description: def.description,
+    install: `npx shadcn add @gencn/${kebab(def.name)}-block`,
+    props: Object.entries(schema.properties ?? {}).map(([prop, value]) => ({
+      prop: schema.required?.includes(prop) ? prop : `${prop}?`,
+      type: typeOf(value),
+    })),
+    events: def.events ?? [],
+    children: !!def.slots?.length,
+  }
+}
+
+const sections = groups.map(({ title, has }) => ({
+  title,
+  blocks: defs.filter(has).map(describe),
+}))
+---
+
+{
+  sections.map(({ title, blocks }) => (
+    <>
+      <h2 id={kebab(title)}>{title}</h2>
+      {blocks.map((block) => (
+        <section>
+          <h3 id={kebab(block.name)}>{block.name}</h3>
+          <p>{block.description}</p>
+          <pre>
+            <code>{block.install}</code>
+          </pre>
+          {block.props.length > 0 && (
+            <table class="block-props">
+              <thead>
+                <tr>
+                  <th>Prop</th>
+                  <th>Type</th>
+                </tr>
+              </thead>
+              <tbody>
+                {block.props.map(({ prop, type }) => (
+                  <tr>
+                    <td>
+                      <code>{prop}</code>
+                    </td>
+                    <td>
+                      <code>{type}</code>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+          {(block.events.length > 0 || block.children) && (
+            <p>
+              {block.children && 'Takes children. '}
+              {block.events.length > 0 && (
+                <>
+                  Events:{' '}
+                  {block.events.map((event, index) => (
+                    <>
+                      {index > 0 && ', '}
+                      <code>{event}</code>
+                    </>
+                  ))}
+                  .
+                </>
+              )}
+            </p>
+          )}
+        </section>
+      ))}
+    </>
+  ))
+}

@@ -1,0 +1,70 @@
+/*
+ * shadcn's neutral palette and Geist on Starlight's own custom properties:
+ * quiet, monochrome and square. Unlayered, so it overrides Starlight.
+ */
+:root {
+  --sl-font: 'Geist Variable';
+  --sl-font-mono: 'Geist Mono Variable';
+
+  /* Dark */
+  --sl-color-white: oklch(0.985 0 0);
+  --sl-color-gray-1: oklch(0.97 0 0);
+  --sl-color-gray-2: oklch(0.87 0 0);
+  --sl-color-gray-3: oklch(0.708 0 0);
+  --sl-color-gray-4: oklch(0.556 0 0);
+  --sl-color-gray-5: oklch(0.3 0 0);
+  --sl-color-gray-6: oklch(0.205 0 0);
+  --sl-color-black: oklch(0.145 0 0);
+
+  --sl-color-accent-low: oklch(0.269 0 0);
+  --sl-color-accent: oklch(0.922 0 0);
+  --sl-color-accent-high: oklch(0.985 0 0);
+}
+
+:root[data-theme='light'] {
+  --sl-color-white: oklch(0.145 0 0);
+  --sl-color-gray-1: oklch(0.205 0 0);
+  --sl-color-gray-2: oklch(0.269 0 0);
+  --sl-color-gray-3: oklch(0.439 0 0);
+  --sl-color-gray-4: oklch(0.556 0 0);
+  --sl-color-gray-5: oklch(0.87 0 0);
+  --sl-color-gray-6: oklch(0.97 0 0);
+  --sl-color-gray-7: oklch(0.985 0 0);
+  --sl-color-black: oklch(1 0 0);
+
+  --sl-color-accent-low: oklch(0.97 0 0);
+  --sl-color-accent: oklch(0.205 0 0);
+  --sl-color-accent-high: oklch(0.145 0 0);
+}
+
+h1,
+.sl-markdown-content :is(h2, h3, h4) {
+  letter-spacing: -0.025em;
+}
+
+/* Logo in the header: the lockup, in the text colour. */
+.site-title img {
+  height: 1.5rem;
+  width: auto;
+}
+:root:not([data-theme='light']) .site-title img {
+  filter: invert(1);
+}
+
+/* The embedded playground. */
+.demo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.demo-frame {
+  display: block;
+  width: 100%;
+  height: min(48rem, 85svh);
+  border: 1px solid var(--sl-color-gray-5);
+}
+
+/* The blocks list. */
+.block-props code {
+  white-space: nowrap;
+}

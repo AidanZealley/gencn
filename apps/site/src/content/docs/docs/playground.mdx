@@ -1,0 +1,27 @@
+---
+title: Playground
+description: Edit a view's spec and use it against a pretend smart home.
+---
+
+import { LinkButton } from '@astrojs/starlight/components'
+
+Paste or edit a spec. `checkSpec` runs as you type, and the view renders twice: once with `useGencnView`, once with `<GencnView>`. The tools belong to a pretend smart home: the porch light always fails, and changing the heating asks first.
+
+<div class="demo-actions">
+  <LinkButton
+    href="/gencn/playground/"
+    target="_blank"
+    rel="noopener noreferrer"
+    variant="secondary"
+    icon="external"
+  >
+    Fullscreen
+  </LinkButton>
+</div>
+
+<iframe
+  class="demo-frame"
+  src="/gencn/playground/"
+  title="gencn playground"
+  loading="lazy"
+></iframe>

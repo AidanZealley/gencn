@@ -2,3 +2,11 @@ packages:
   - apps/*
   - packages/*
   - registry
+
+overrides:
+  # Newer native binaries die with "Illegal instruction" on x64 CPUs
+  # without AVX2, such as Aidan's i7-3740QM; Familiar's versions work.
+  # Drop these once fixed ones ship. Pagefind failing doesn't fail
+  # `astro build`, but scripts/check-links.ts does.
+  '@astrojs/compiler-rs': 0.5.2
+  pagefind: 1.5.2

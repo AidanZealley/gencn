@@ -3,7 +3,7 @@
 // Items with `meta.library` only go to that library's styles.
 import { copyFileSync, mkdirSync, readFileSync } from 'node:fs'
 
-const out = '../apps/playground/public/r'
+const out = '../apps/site/public/r'
 const looks = ['vega', 'nova', 'maia', 'lyra', 'mira', 'luma', 'sera', 'rhea']
 // React Aria isn't published until its blocks are checked against shadcn's
 // React Aria components.
