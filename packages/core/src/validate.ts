@@ -127,6 +127,12 @@ export function validateBlocks(catalog: Catalog, spec: Spec): BlockIssue[] {
   return issues
 }
 
+/**
+ * How to write `refresh`, in full. `toolPrompt` gives only its shape, so
+ * this goes to the model with any refresh problem, when it's needed.
+ */
+const REFRESH_GUIDE = `How to write refresh: { "tool", "args", "from"?, "extract": { "/state/path": { "match", "map"?, "as"? } } }. The tool's output is text; "from" is a JSON pointer into it when it's JSON (such as "/result"). Each "match" is an RE2 regex over that text whose first group is the value: write it from the output you just read, anchored on the device's name so it can't match another, e.g. "names: Kitchen Light\\n(?:  .*\\n)*?  state: '(on|off)'". "map" turns the text into a value ({ "on": true, "off": false }); "as": "number" reads a number. Set state to what the output says now.`
+
 /** What `refresh` gets wrong in its own shape: text for the model, or nothing. */
 function refreshProblems(refresh: unknown) {
   const parsed = refreshSchema.safeParse(refresh)
@@ -166,7 +172,11 @@ export function checkSpec(catalog: Catalog, spec: unknown) {
     ...(valid.refresh === undefined ? [] : refreshProblems(valid.refresh)),
   ]
   if (errors.length === 0) return undefined
-  return ['The spec has errors:', ...errors.map((e) => `- ${e}`)].join('\n')
+  return [
+    'The spec has errors:',
+    ...errors.map((e) => `- ${e}`),
+    ...(errors.some((e) => e.startsWith('refresh')) ? ['', REFRESH_GUIDE] : []),
+  ].join('\n')
 }
 
 const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b)
@@ -213,8 +223,11 @@ export function checkRefresh(catalog: Catalog, spec: Spec, output: string) {
         ]
   })
   return problems.length
-    ? ["The view's refresh doesn't read back its state:", ...problems].join(
-        '\n',
-      )
+    ? [
+        "The view's refresh doesn't read back its state:",
+        ...problems,
+        '',
+        REFRESH_GUIDE,
+      ].join('\n')
     : undefined
 }
