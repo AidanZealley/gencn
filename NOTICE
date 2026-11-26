@@ -1,7 +1,0 @@
-gencn
-Copyright 2026 Aidan Zealley
-
-The block definitions' props in packages/core/src/blocks are adapted from
-@json-render/shadcn's catalog (https://github.com/vercel-labs/json-render,
-packages/shadcn/src/catalog.ts), Copyright 2025 Vercel Inc., licensed under
-the Apache License, Version 2.0: https://www.apache.org/licenses/LICENSE-2.0

@@ -18,7 +18,6 @@ export type BlockDef<
   slots?: readonly string[]
   /** Events an element can bind to actions with `on`. All are a person's. */
   events?: Events
-  example?: Record<string, unknown>
 }
 
 /** A block definition, its name and events kept as literal types. */

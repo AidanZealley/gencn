@@ -30,17 +30,16 @@
   "files": [
     "dist",
     "README.md",
-    "LICENSE",
-    "NOTICE"
+    "LICENSE"
   ],
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "pnpm build",
-    "prepack": "cp ../../LICENSE ../../NOTICE ."
+    "prepack": "cp ../../LICENSE ."
   },
   "dependencies": {
     "re2js": "^2.10.0"
