@@ -53,6 +53,8 @@ function blockLine(block: BlockDef) {
   const extras = [
     block.slots?.length && 'Takes children.',
     block.events?.length && `Events: ${block.events.join(', ')}.`,
+    block.valueProp &&
+      `If this block calls a tool, bind ${block.valueProp} with $bindState and set its initial value in state.`,
   ].filter(Boolean)
   return [
     `- ${block.name}: ${typeOf(block.props)} -`,
@@ -84,6 +86,8 @@ export function toolPrompt(catalog: Catalog): string {
     'A Switch for a device with separate on and off tools binds turnOn and turnOff, one tool each. Bind change only to a tool that takes the new value. A tool that only toggles goes on a Button, never a Switch.',
     '',
     'Optional `refresh` reads `state` again, when the view is shown, from a tool that only reads: { "tool", "args", "from"?: "/result", "extract": { "/state/path": { "match": "<RE2 regex; group 1 is the value>", "map"?: { "on": true, "off": false }, "as"?: "number", "scale"?: [<most it reads>, <most it shows>] } } }, where "from" points to the text when the output is JSON, and scale converts a number read in other units than the control\'s tool takes. Write each match from the output you just read. Set `state` to what that output says now: the view is checked against it, and the reply explains anything to fix.',
+    '',
+    'Omit "suggestedIntervalMs" by default. Include it only if the user asks for live updates or needs to observe changes as they happen while the view is open. Omit it when an occasional read is enough. Use a positive whole number of milliseconds. The app may ignore it.',
     '',
     'Blocks:',
     ...catalog.blocks.map(blockLine),

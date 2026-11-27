@@ -5,6 +5,7 @@ import { defineBlockDef } from '../block.js'
 
 export const Switch = defineBlockDef({
   name: 'Switch',
+  valueProp: 'checked',
   description:
     'Turns one thing on or off, such as a light or a setting. turnOn and ' +
     'turnOff fire for the new position, so bind one tool to each; change ' +
@@ -20,6 +21,7 @@ export const Switch = defineBlockDef({
 
 export const Slider = defineBlockDef({
   name: 'Slider',
+  valueProp: 'value',
   description:
     'Sets a number within a range, such as brightness or volume. change ' +
     'fires once, when the person lets go.',
@@ -37,6 +39,7 @@ export const Slider = defineBlockDef({
 
 export const Select = defineBlockDef({
   name: 'Select',
+  valueProp: 'value',
   description:
     'Chooses one of a few named options, such as a mode or a scene. ' +
     'change fires when the choice changes.',

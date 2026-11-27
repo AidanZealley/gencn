@@ -14,9 +14,11 @@ export type BlockIssue = {
     | 'invalid_props'
     | 'unknown_event'
     | 'unknown_action'
+    | 'invalid_binding'
     | Rejected['code']
     | 'call_tool_name'
     | 'switch_binding'
+    | 'tool_control_binding'
   elementKey: string
   message: string
 }
@@ -41,6 +43,15 @@ function parseProps(block: BlockDef, props: Record<string, unknown>) {
   return z.strictObject(shape).safeParse(without(props))
 }
 
+// Tool arguments can contain nested objects beyond the upstream action schema.
+const eventBinding = z.object({
+  action: z.string(),
+  params: z.record(z.string(), z.unknown()).optional(),
+})
+const eventBindings = z
+  .record(z.string(), z.union([eventBinding, z.array(eventBinding)]))
+  .optional()
+
 /**
  * Checks what json-render's own validation doesn't: each element's props
  * against its block (strict: no `className`), its events, the actions they
@@ -55,6 +66,8 @@ export function validateBlocks(catalog: Catalog, spec: Spec): BlockIssue[] {
   }
   const builtIns =
     catalog.jsonRender.schema.builtInActions?.map((a) => a.name) ?? []
+  const calls = toolCalls(spec)
+  const toolControls = new Set(calls.map(({ element }) => element))
   const issues: BlockIssue[] = []
   const report = (code: BlockIssue['code'], key: string, message: string) =>
     issues.push({ severity: 'error', code, elementKey: key, message })
@@ -67,7 +80,33 @@ export function validateBlocks(catalog: Catalog, spec: Spec): BlockIssue[] {
       const why = z.prettifyError(parsed.error).replaceAll('\n', ' ')
       report('invalid_props', key, `"${key}" (${element.type}): ${why}`)
     }
-    const on = element.on ?? {}
+    const prop = block.valueProp
+    if (prop && toolControls.has(key)) {
+      const value = element.props?.[prop] as
+        { $bindState?: unknown } | undefined
+      const path = value?.$bindState
+      const initial =
+        typeof path === 'string' && /^\/(?:[^~]|~[01])+$/.test(path)
+          ? getByPath(spec.state ?? {}, path)
+          : undefined
+      if (
+        initial === undefined ||
+        !block.props.shape[prop]?.safeParse(initial).success
+      ) {
+        report(
+          'tool_control_binding',
+          key,
+          `"${key}" (${element.type}): bind "${prop}" with { "$bindState": "/path" } and set a valid initial value at that path in "state".`,
+        )
+      }
+    }
+    const events = eventBindings.safeParse(element.on)
+    if (!events.success) {
+      const why = z.prettifyError(events.error).replaceAll('\n', ' ')
+      report('invalid_binding', key, `"${key}".on: ${why}`)
+      continue
+    }
+    const on = events.data ?? {}
     for (const [event, bound] of Object.entries(on)) {
       if (!block.events?.includes(event)) {
         report('unknown_event', key, `"${key}" has no "${event}" event`)
@@ -93,7 +132,7 @@ export function validateBlocks(catalog: Catalog, spec: Spec): BlockIssue[] {
   for (const { code, elementKey, message } of rejected(spec)) {
     report(code, elementKey, message)
   }
-  for (const call of toolCalls(spec)) {
+  for (const call of calls) {
     if (!call.tools) {
       report(
         'call_tool_name',
