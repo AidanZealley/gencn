@@ -268,4 +268,122 @@ const thermostat: Spec = {
   },
 }
 
-export const specs = { 'Living room': livingRoom, Thermostat: thermostat }
+const readings = {
+  title: 'Electricity use',
+  series: ['This week', 'Last week'],
+  unit: 'kWh',
+  rows: [
+    { label: 'Mon', values: [11, 9] },
+    { label: 'Tue', values: [null, 10] },
+    { label: 'Wed', values: [8, 12] },
+    { label: 'Thu', values: [10, 7] },
+  ],
+}
+
+const data: Spec = {
+  root: 'data',
+  elements: {
+    data: {
+      type: 'Stack',
+      props: {},
+      children: ['line', 'breakdown', 'table', 'gallery'],
+    },
+    line: {
+      type: 'Chart',
+      props: { ...readings, variant: 'line' },
+      children: [],
+    },
+    breakdown: {
+      type: 'Collapsible',
+      props: {
+        summary: 'Compare daily readings',
+        details: "Tuesday's reading for this week is missing.",
+      },
+      children: ['horizontal', 'vertical'],
+    },
+    horizontal: {
+      type: 'Chart',
+      props: { ...readings, variant: 'bar-horizontal' },
+      children: [],
+    },
+    vertical: {
+      type: 'Chart',
+      props: { ...readings, variant: 'bar-vertical' },
+      children: [],
+    },
+    table: {
+      type: 'DataTable',
+      props: {
+        caption: 'Electricity use in kWh',
+        columns: ['Day', ...readings.series],
+        rows: readings.rows.map(({ label, values }) => [label, ...values]),
+        sortable: true,
+      },
+      children: [],
+    },
+    gallery: {
+      type: 'Carousel',
+      children: [],
+      props: {
+        label: 'Cats',
+        images: [
+          {
+            src: cat,
+            alt: 'A tabby cat with green eyes',
+            caption: 'Tabby cat',
+          },
+          {
+            src: 'https://upload.wikimedia.org/wikipedia/commons/a/a3/June_odd-eyed-cat.jpg',
+            alt: 'A white cat with one blue eye and one amber eye',
+            caption: 'Odd-eyed cat',
+          },
+        ],
+      },
+    },
+  },
+}
+
+const trace: Spec = {
+  root: 'trace',
+  state: { position: { x: 0, y: 0, z: 2 } },
+  elements: {
+    trace: {
+      type: 'Stack',
+      props: {},
+      children: ['position', 'move'],
+    },
+    position: {
+      type: 'Chart',
+      props: {
+        title: 'Simulated printer position',
+        variant: 'trace',
+        series: ['X', 'Y', 'Z'],
+        unit: 'mm',
+        latest: [
+          { $state: '/position/x' },
+          { $state: '/position/y' },
+          { $state: '/position/z' },
+        ],
+      },
+      children: [],
+    },
+    move: {
+      type: 'Button',
+      props: { label: 'Move to X 40, Y 25, Z 2' },
+      on: {
+        press: {
+          action: 'setState',
+          params: { statePath: '/position', value: { x: 40, y: 25, z: 2 } },
+        },
+      },
+      children: [],
+    },
+  },
+}
+
+export const specs = {
+  'Living room': livingRoom,
+  Thermostat: thermostat,
+  Data: data,
+  Trace: trace,
+}
