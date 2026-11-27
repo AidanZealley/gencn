@@ -117,6 +117,8 @@ From `gencn`. Returns `def`, typed as a `BlockDef`.
 
 `gap` is the `'sm' | 'md' | 'lg'` enum gencn's layout blocks use for spacing, for blocks of your own to match. `PropsOf<typeof Rating>` is a definition's props after parsing.
 
+Use `valueProp: 'value'` to name the prop your control edits. When a view wires that control to a tool, gencn checks that the prop uses `$bindState` and that the path starts with a valid value. The component uses the binding to read and write the value, so gencn can restore it on decline.
+
 ### `defineBlock(def, component)`
 
 From `gencn/react`. Pairs a definition with its component, and returns a `Block`. The component (a `BlockView`) gets json-render's props:

@@ -40,10 +40,10 @@ export function jsonRenderCatalog(blocks: readonly BlockDef[]) {
   // json-render's entry shape, without the name; its types want mutable
   // arrays, and gencn types the blocks itself, so the config is untyped.
   const components = Object.fromEntries(
-    blocks.map(({ name, slots, events, ...entry }) => [
+    blocks.map(({ name, description, slots, events }) => [
       name,
       {
-        ...entry,
+        description,
         props,
         slots: slots && [...slots],
         events: events && [...events],

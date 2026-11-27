@@ -14,6 +14,8 @@ export type BlockDef<
   /** What the block does, so the model can match a task to it. */
   description: string
   props: Props
+  /** The prop that holds the value the person edits. */
+  valueProp?: string
   /** `['default']` when the block takes children. */
   slots?: readonly string[]
   /** Events an element can bind to actions with `on`. All are a person's. */
@@ -26,8 +28,10 @@ export const defineBlockDef = <
   Props extends z.ZodObject,
   const Events extends readonly string[] = readonly [],
 >(
-  def: BlockDef<Name, Props, Events>,
-) => def
+  def: BlockDef<Name, Props, Events> & {
+    valueProp?: Extract<keyof NoInfer<Props>['shape'], string>
+  },
+): BlockDef<Name, Props, Events> => def
 
 /** A block's props after parsing, for typing its view. */
 export type PropsOf<D extends BlockDef> = z.output<D['props']>

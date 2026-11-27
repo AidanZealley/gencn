@@ -53,6 +53,8 @@ function blockLine(block: BlockDef) {
   const extras = [
     block.slots?.length && 'Takes children.',
     block.events?.length && `Events: ${block.events.join(', ')}.`,
+    block.valueProp &&
+      `If this block calls a tool, bind ${block.valueProp} with $bindState and set its initial value in state.`,
   ].filter(Boolean)
   return [
     `- ${block.name}: ${typeOf(block.props)} -`,

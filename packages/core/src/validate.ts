@@ -17,6 +17,7 @@ export type BlockIssue = {
     | Rejected['code']
     | 'call_tool_name'
     | 'switch_binding'
+    | 'tool_control_binding'
   elementKey: string
   message: string
 }
@@ -55,6 +56,8 @@ export function validateBlocks(catalog: Catalog, spec: Spec): BlockIssue[] {
   }
   const builtIns =
     catalog.jsonRender.schema.builtInActions?.map((a) => a.name) ?? []
+  const calls = toolCalls(spec)
+  const toolControls = new Set(calls.map(({ element }) => element))
   const issues: BlockIssue[] = []
   const report = (code: BlockIssue['code'], key: string, message: string) =>
     issues.push({ severity: 'error', code, elementKey: key, message })
@@ -66,6 +69,26 @@ export function validateBlocks(catalog: Catalog, spec: Spec): BlockIssue[] {
     if (!parsed.success) {
       const why = z.prettifyError(parsed.error).replaceAll('\n', ' ')
       report('invalid_props', key, `"${key}" (${element.type}): ${why}`)
+    }
+    const prop = block.valueProp
+    if (prop && toolControls.has(key)) {
+      const value = element.props?.[prop] as
+        { $bindState?: unknown } | undefined
+      const path = value?.$bindState
+      const initial =
+        typeof path === 'string' && /^\/(?:[^~]|~[01])+$/.test(path)
+          ? getByPath(spec.state ?? {}, path)
+          : undefined
+      if (
+        initial === undefined ||
+        !block.props.shape[prop]?.safeParse(initial).success
+      ) {
+        report(
+          'tool_control_binding',
+          key,
+          `"${key}" (${element.type}): bind "${prop}" with { "$bindState": "/path" } and set a valid initial value at that path in "state".`,
+        )
+      }
     }
     const on = element.on ?? {}
     for (const [event, bound] of Object.entries(on)) {
@@ -93,7 +116,7 @@ export function validateBlocks(catalog: Catalog, spec: Spec): BlockIssue[] {
   for (const { code, elementKey, message } of rejected(spec)) {
     report(code, elementKey, message)
   }
-  for (const call of toolCalls(spec)) {
+  for (const call of calls) {
     if (!call.tools) {
       report(
         'call_tool_name',

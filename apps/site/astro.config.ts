@@ -56,6 +56,7 @@ export default defineConfig({
           label: 'Docs',
           items: [
             'docs/getting-started',
+            'docs/layers',
             'docs/catalog',
             'docs/rendering',
             'docs/refresh',
