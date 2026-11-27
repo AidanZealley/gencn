@@ -87,6 +87,8 @@ export function toolPrompt(catalog: Catalog): string {
     '',
     'Optional `refresh` reads `state` again, when the view is shown, from a tool that only reads: { "tool", "args", "from"?: "/result", "extract": { "/state/path": { "match": "<RE2 regex; group 1 is the value>", "map"?: { "on": true, "off": false }, "as"?: "number", "scale"?: [<most it reads>, <most it shows>] } } }, where "from" points to the text when the output is JSON, and scale converts a number read in other units than the control\'s tool takes. Write each match from the output you just read. Set `state` to what that output says now: the view is checked against it, and the reply explains anything to fix.',
     '',
+    'Omit "suggestedIntervalMs" by default. Include it only if the user asks for live updates or needs to observe changes as they happen while the view is open. Omit it when an occasional read is enough. Use a positive whole number of milliseconds. The app may ignore it.',
+    '',
     'Blocks:',
     ...catalog.blocks.map(blockLine),
   ].join('\n')

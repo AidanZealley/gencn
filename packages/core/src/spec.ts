@@ -28,6 +28,8 @@ export type Refresh = {
   tool: string
   args?: Record<string, unknown>
   from?: string
+  /** Suggested polling delay in milliseconds. The host decides when to read. */
+  suggestedIntervalMs?: number
   /** By state path, such as `/kitchen/on`. */
   extract: Record<string, Extraction>
 }
@@ -38,6 +40,7 @@ export type Spec = JsonRenderSpec & { refresh?: Refresh }
 export const refreshSchema = z.strictObject({
   tool: z.string().min(1),
   args: z.record(z.string(), z.unknown()).optional(),
+  suggestedIntervalMs: z.number().int().positive().optional(),
   from: z
     .string()
     .regex(/^(\/.*)?$/, 'from is a JSON pointer, such as "/result"')

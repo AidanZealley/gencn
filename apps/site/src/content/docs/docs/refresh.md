@@ -39,11 +39,17 @@ The view reads through the hook's `onRead` option, which calls the tool and retu
 
 Only use tools your app would let the model call without asking.
 
+For a view that benefits from live updates, the model can suggest a polling delay with `refresh.suggestedIntervalMs`. For example, `1000` suggests reading once a second for a card showing a printer heating up. gencn treats this as a hint. Your app can honor it, apply its own minimum delay, or ignore it.
+
+If your app schedules the reads, use `readOn: 'manual'` and call `refresh()` while the card is visible. Wait for each read to settle before scheduling the next one. One refresh reads all the values in the recipe.
+
 ## API reference
 
 ### `Refresh`
 
 The spec's `refresh` field.
+
+`suggestedIntervalMs` is an optional positive integer in milliseconds. It leaves the hook's refresh timing up to the host.
 
 | Field     | Type                         | Description                                                                                |
 | --------- | ---------------------------- | ------------------------------------------------------------------------------------------ |
