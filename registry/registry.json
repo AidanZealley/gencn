@@ -235,6 +235,80 @@
       "meta": {
         "block": "Button"
       }
+    },
+    {
+      "name": "carousel-block",
+      "type": "registry:component",
+      "title": "Carousel block",
+      "description": "Renders the Carousel block from gencn with your own shadcn components.",
+      "dependencies": ["gencn"],
+      "registryDependencies": ["carousel"],
+      "files": [
+        {
+          "path": "blocks/carousel-block.tsx",
+          "type": "registry:component",
+          "target": "components/generative/carousel-block.tsx"
+        }
+      ],
+      "meta": {
+        "block": "Carousel"
+      }
+    },
+    {
+      "name": "chart-block",
+      "type": "registry:component",
+      "title": "Chart block",
+      "description": "Renders the Chart block from gencn with your own shadcn components.",
+      "dependencies": ["gencn"],
+      "registryDependencies": ["chart"],
+      "files": [
+        {
+          "path": "blocks/chart-block.tsx",
+          "type": "registry:component",
+          "target": "components/generative/chart-block.tsx"
+        }
+      ],
+      "meta": {
+        "block": "Chart",
+        "library": "base"
+      }
+    },
+    {
+      "name": "collapsible-block",
+      "type": "registry:component",
+      "title": "Collapsible block",
+      "description": "Renders the Collapsible block from gencn with your own shadcn components.",
+      "dependencies": ["gencn"],
+      "registryDependencies": ["collapsible"],
+      "files": [
+        {
+          "path": "blocks/collapsible-block.tsx",
+          "type": "registry:component",
+          "target": "components/generative/collapsible-block.tsx"
+        }
+      ],
+      "meta": {
+        "block": "Collapsible",
+        "library": "base"
+      }
+    },
+    {
+      "name": "data-table-block",
+      "type": "registry:component",
+      "title": "DataTable block",
+      "description": "Renders the DataTable block from gencn with your own shadcn components.",
+      "dependencies": ["gencn"],
+      "registryDependencies": ["table"],
+      "files": [
+        {
+          "path": "blocks/data-table-block.tsx",
+          "type": "registry:component",
+          "target": "components/generative/data-table-block.tsx"
+        }
+      ],
+      "meta": {
+        "block": "DataTable"
+      }
     }
   ]
 }

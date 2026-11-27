@@ -4,6 +4,10 @@ import { createBlocks } from 'gencn/react'
 import { badgeBlock } from '@/components/generative/badge-block'
 import { buttonBlock } from '@/components/generative/button-block'
 import { cardBlock } from '@/components/generative/card-block'
+import { carouselBlock } from '@/components/generative/carousel-block'
+import { chartBlock } from '@/components/generative/chart-block'
+import { collapsibleBlock } from '@/components/generative/collapsible-block'
+import { dataTableBlock } from '@/components/generative/data-table-block'
 import { gridBlock } from '@/components/generative/grid-block'
 import { headingBlock } from '@/components/generative/heading-block'
 import { imageBlock } from '@/components/generative/image-block'
@@ -18,6 +22,10 @@ import { catalog } from './catalog'
 
 export const blocks = createBlocks(catalog, [
   cardBlock,
+  carouselBlock,
+  chartBlock,
+  collapsibleBlock,
+  dataTableBlock,
   stackBlock,
   gridBlock,
   separatorBlock,

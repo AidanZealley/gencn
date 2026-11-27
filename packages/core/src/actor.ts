@@ -86,7 +86,7 @@ export function createViewActor(
   }
 
   /** Reads the view's state again from its refresh tool. */
-  const refresh = async () => {
+  const refresh = async (sourceKind?: 'automatic') => {
     const { refresh: source } = spec
     const { onRead } = host
     const { signal } = lifetime
@@ -99,7 +99,11 @@ export function createViewActor(
     )
       return
     const { tool } = source
-    setPhase({ kind: 'reading', tool })
+    setPhase({
+      kind: 'reading',
+      tool,
+      ...(sourceKind && { source: sourceKind }),
+    })
     let results: Extracted[]
     try {
       const output = await until(
@@ -237,7 +241,7 @@ export type Unavailable =
 export type GencnPhase =
   | { kind: 'idle'; notice?: Notice }
   | { kind: 'running'; tool: string }
-  | { kind: 'reading'; tool: string }
+  | { kind: 'reading'; tool: string; source?: 'automatic' }
   | ({ kind: 'unavailable' } & Unavailable)
 
 /**

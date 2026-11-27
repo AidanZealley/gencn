@@ -16,6 +16,10 @@ export type GencnViewOptions = ViewHost & {
    * screen (default), once when the view mounts, or only on `refresh()`.
    */
   readOn?: 'visible' | 'mount' | 'manual'
+  /** Opt in to suggested intervals for visible views, with this minimum. */
+  minRefreshIntervalMs?: number
+  /** Suspend automatic reads for views with an enabled interval. */
+  refreshPaused?: boolean
 }
 
 /**
@@ -26,7 +30,14 @@ export type GencnViewOptions = ViewHost & {
  */
 export function useGencnView(
   spec: Spec,
-  { blocks, onAction, onRead, readOn = 'visible' }: GencnViewOptions,
+  {
+    blocks,
+    onAction,
+    onRead,
+    readOn = 'visible',
+    minRefreshIntervalMs,
+    refreshPaused,
+  }: GencnViewOptions,
 ) {
   const [actor] = useState(() =>
     createViewActor(spec, { onAction, onRead, catalog: blocks.catalog }),
@@ -42,6 +53,14 @@ export function useGencnView(
   // The element `ref` is on; only `visible` watches it, so attaching it
   // never reads again on `mount`.
   const [element, ref] = useState<Element | null>(null)
+  const suggested = actor.spec.refresh?.suggestedIntervalMs
+  const interval =
+    suggested !== undefined &&
+    minRefreshIntervalMs !== undefined &&
+    Number.isFinite(minRefreshIntervalMs) &&
+    minRefreshIntervalMs > 0
+      ? Math.min(Math.max(suggested, minRefreshIntervalMs), 2_147_483_647)
+      : undefined
   const watched = readOn === 'visible' ? element : null
   useEffect(() => {
     if (!refresh || readOn === 'manual') return
@@ -49,17 +68,48 @@ export function useGencnView(
       void refresh()
       return
     }
-    if (!watched) return
+    if (!watched || (interval !== undefined && refreshPaused)) return
     // Reads as it comes on screen, not on every callback while it stays.
     let visible = false
+    let timer: ReturnType<typeof setInterval> | undefined
+    const updateTimer = () => {
+      const shouldPoll =
+        interval !== undefined &&
+        visible &&
+        !document.hidden &&
+        actor.phase().kind !== 'unavailable'
+      if (shouldPoll && timer === undefined) {
+        timer = setInterval(() => {
+          if (!document.hidden && actor.phase().kind === 'idle')
+            void refresh('automatic')
+        }, interval)
+      } else if (!shouldPoll && timer !== undefined) {
+        clearInterval(timer)
+        timer = undefined
+      }
+    }
     const observer = new IntersectionObserver(([entry]) => {
       const now = !!entry?.isIntersecting
-      if (now && !visible) void refresh()
+      if (now && !visible && (interval === undefined || !document.hidden)) {
+        const current = actor.phase().kind
+        if (interval === undefined) void refresh()
+        else if (current === 'idle') void refresh('automatic')
+      }
       visible = now
+      updateTimer()
     })
     observer.observe(watched)
-    return () => observer.disconnect()
-  }, [refresh, readOn, watched])
+    if (interval === undefined) return () => observer.disconnect()
+
+    document.addEventListener('visibilitychange', updateTimer)
+    const unsubscribe = actor.subscribe(updateTimer)
+    return () => {
+      observer.disconnect()
+      document.removeEventListener('visibilitychange', updateTimer)
+      unsubscribe()
+      clearInterval(timer)
+    }
+  }, [actor, interval, refresh, refreshPaused, readOn, watched])
 
   const { registry } = blocks
   const view: ReactNode = actor.refused ? null : (
@@ -91,6 +141,8 @@ export function useGencnView(
       Unavailable | undefined,
     /** Reads the view's state again; undefined when it has no refresh. */
     refresh,
+    /** The configured interval for visible reads, when enabled. */
+    refreshIntervalMs: readOn === 'visible' && refresh ? interval : undefined,
     phase,
   }
 }

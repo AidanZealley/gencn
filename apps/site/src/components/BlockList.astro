@@ -13,7 +13,7 @@ const defs = (Object.values(gencn) as unknown[]).filter(
 )
 
 type Schema = {
-  type?: string
+  type?: string | string[]
   enum?: unknown[]
   const?: unknown
   anyOf?: Schema[]
@@ -30,14 +30,20 @@ const typeOf = (schema: Schema): string =>
       : schema.anyOf
         ? schema.anyOf.map(typeOf).join(' | ')
         : schema.type === 'array' && schema.items
-          ? `${typeOf(schema.items)}[]`
+          ? arrayOf(typeOf(schema.items))
           : schema.type === 'object' && schema.properties
             ? `{ ${Object.entries(schema.properties)
                 .map(([key, value]) => `${key}: ${typeOf(value)}`)
                 .join(', ')} }`
-            : (schema.type ?? 'unknown')
+            : Array.isArray(schema.type)
+              ? schema.type.join(' | ')
+              : (schema.type ?? 'unknown')
 
-const kebab = (name: string) => name.toLowerCase()
+const arrayOf = (item: string) =>
+  item.includes(' | ') ? `Array<${item}>` : `${item}[]`
+
+const kebab = (name: string) =>
+  name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()
 
 // Grouped as the model meets them: blocks that hold others, controls a
 // person uses (they fire events), and the content between.

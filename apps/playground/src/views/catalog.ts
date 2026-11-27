@@ -3,6 +3,10 @@ import {
   Badge,
   Button,
   Card,
+  Carousel,
+  Chart,
+  Collapsible,
+  DataTable,
   Grid,
   Heading,
   Image,
@@ -18,6 +22,10 @@ import {
 
 export const catalog = createCatalog([
   Card,
+  Carousel,
+  Chart,
+  Collapsible,
+  DataTable,
   Stack,
   Grid,
   Separator,
