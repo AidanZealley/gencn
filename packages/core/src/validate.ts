@@ -14,6 +14,7 @@ export type BlockIssue = {
     | 'invalid_props'
     | 'unknown_event'
     | 'unknown_action'
+    | 'invalid_binding'
     | Rejected['code']
     | 'call_tool_name'
     | 'switch_binding'
@@ -41,6 +42,15 @@ function parseProps(block: BlockDef, props: Record<string, unknown>) {
   const shape = without(block.props.shape) as z.ZodRawShape
   return z.strictObject(shape).safeParse(without(props))
 }
+
+// Tool arguments can contain nested objects beyond the upstream action schema.
+const eventBinding = z.object({
+  action: z.string(),
+  params: z.record(z.string(), z.unknown()).optional(),
+})
+const eventBindings = z
+  .record(z.string(), z.union([eventBinding, z.array(eventBinding)]))
+  .optional()
 
 /**
  * Checks what json-render's own validation doesn't: each element's props
@@ -90,7 +100,13 @@ export function validateBlocks(catalog: Catalog, spec: Spec): BlockIssue[] {
         )
       }
     }
-    const on = element.on ?? {}
+    const events = eventBindings.safeParse(element.on)
+    if (!events.success) {
+      const why = z.prettifyError(events.error).replaceAll('\n', ' ')
+      report('invalid_binding', key, `"${key}".on: ${why}`)
+      continue
+    }
+    const on = events.data ?? {}
     for (const [event, bound] of Object.entries(on)) {
       if (!block.events?.includes(event)) {
         report('unknown_event', key, `"${key}" has no "${event}" event`)
